@@ -9,15 +9,17 @@ public class
 Arm {
     //final static double WRIST_OPEN = 0.8;
     //final static double WRIST_CLOSED = 0.2;
-    final static double WRIST_SPEED = 0.05;
-    final static double CLAW_OPEN = 0.8;
-    final static double CLAW_CLOSED = 0.2;
+    final static double WRIST_SPEED = 0.005;
+    final static double CLAW_OPEN = 0.4;
+    final static double CLAW_CLOSED = 0.8;
 
     OpMode opMode;
 
     DcMotor elbowMotorLeft, elbowMotorRight;
     Servo wristServo;
     Servo clawServo;
+
+    int cnt;
 
     double wristPos = 0;
 
@@ -64,5 +66,8 @@ Arm {
             clawServo.setPosition(CLAW_OPEN);
             opMode.telemetry.addData("Key Pressed: ", "Claw Open (Y)");
         }
+
+        cnt++;
+        opMode.telemetry.addData("Count: ", cnt);
     }
 }
