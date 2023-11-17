@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.Hamza.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous
-public class HamzaAutonOpMode extends LinearOpMode {
+public class HamzaAutonOpMode extends OpMode {
     DcMotor RFMotor;
     DcMotor LFMotor;
     DcMotor RBMotor;
@@ -15,7 +16,9 @@ public class HamzaAutonOpMode extends LinearOpMode {
     final static int TICKS_PER_ROTATION = 1440;
     final static int TIRE_DIAMETER_INCHES = 4;
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
+        telemetry.addData("Testing", "Success");
+
         RFMotor = hardwareMap.get(DcMotor.class, "right_front_drive");
         LFMotor = hardwareMap.get(DcMotor.class, "left_front_drive");
         RBMotor = hardwareMap.get(DcMotor.class, "right_back_drive");
@@ -32,8 +35,10 @@ public class HamzaAutonOpMode extends LinearOpMode {
         initalizeMotor(LBMotor);
 
         telemetry.addData("Auto: ", "Initialized");
+    }
 
-        waitForStart();
+    @Override
+    public void start() {
 
         int dist = 4*12;
         double tireCircumference = Math.PI * TIRE_DIAMETER_INCHES;
@@ -45,9 +50,17 @@ public class HamzaAutonOpMode extends LinearOpMode {
         LFMotor.setTargetPosition(ticks);
         LBMotor.setTargetPosition(ticks);
 
-        while (RFMotor.getCurrentPosition() < ticks) {
-            opModeIsActive();
-        };
+        //while (opModeIsActive()) {
+        //while (RFMotor.getCurrentPosition() < ticks) {
+
+
+        //}
+        //}
+    }
+
+    @Override
+    public void loop() {
+        telemetry.addData("Ticks: ", RFMotor.getCurrentPosition());
     }
 
     void initalizeMotor(DcMotor motor) {

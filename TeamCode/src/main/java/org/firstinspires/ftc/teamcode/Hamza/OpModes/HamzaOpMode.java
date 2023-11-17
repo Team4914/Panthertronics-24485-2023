@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hamza.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // Shared Import
@@ -13,6 +14,7 @@ public class HamzaOpMode extends OpMode {
     Arm arm;
 
     DcMotor hangRopeMotor;
+    DcMotor rollerMotor;
     Servo hangArmServo;
 
 
@@ -21,8 +23,10 @@ public class HamzaOpMode extends OpMode {
         mecanumDrive = new MecanumDrive(this);
         arm = new Arm(this);
 
-        hangRopeMotor = hardwareMap.get(DcMotor.class, "hangMotor");
-        hangArmServo = hardwareMap.get(Servo.class, "hangServo");
+        //hangRopeMotor = hardwareMap.get(DcMotor.class, "hangMotor");
+        //hangArmServo = hardwareMap.get(Servo.class, "hangServo");
+
+        rollerMotor = hardwareMap.get(DcMotor.class, "a");
 
         telemetry.addData("Hardware: ", "Initialized");
     }
@@ -31,7 +35,7 @@ public class HamzaOpMode extends OpMode {
     public void loop() {
         mecanumDrive.update();
         arm.update();
-
+        /*
         if (gamepad1.dpad_up) {
             hangRopeMotor.setPower(1);
         } else if (gamepad1.dpad_down) {
@@ -45,6 +49,10 @@ public class HamzaOpMode extends OpMode {
         }
         else if (gamepad1.b) {
             hangArmServo.setPosition(0); // Temp Open
+        }
+        */
+        if (gamepad1.a) {
+            rollerMotor.setPower(1);
         }
     }
 }
