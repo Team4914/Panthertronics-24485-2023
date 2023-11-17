@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode.hamzaopmodes;
+package org.firstinspires.ftc.teamcode.Hamza.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+// Shared Import
+import org.firstinspires.ftc.teamcode.shared.*;
 @TeleOp
-public class MainOpModeHamza extends OpMode {
+public class HamzaOpMode extends OpMode {
     MecanumDrive mecanumDrive;
     Arm arm;
 
@@ -39,8 +41,7 @@ public class MainOpModeHamza extends OpMode {
         }
 
         if (gamepad1.a) {
-            hangArmServo.setPosition(1); // Temp Close
-            telemetry.addData(v4);
+            hangArmServo.setPosition(1); // Temp Close;
         }
         else if (gamepad1.b) {
             hangArmServo.setPosition(0); // Temp Open

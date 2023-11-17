@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.Airagan.OpModes;
  
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  
  
 @TeleOp
-public class testing extends OpMode {
+public class testingAiragan extends OpMode {
     DcMotor motor, motor1;
     Servo servo1;
     Servo servo;

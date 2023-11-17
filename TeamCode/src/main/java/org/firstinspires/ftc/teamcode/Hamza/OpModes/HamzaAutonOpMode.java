@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hamzaopmodes;
+package org.firstinspires.ftc.teamcode.Hamza.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous
-public class MainAutonomous extends LinearOpMode {
+public class HamzaAutonOpMode extends LinearOpMode {
     DcMotor RFMotor;
     DcMotor LFMotor;
     DcMotor RBMotor;
@@ -45,7 +45,9 @@ public class MainAutonomous extends LinearOpMode {
         LFMotor.setTargetPosition(ticks);
         LBMotor.setTargetPosition(ticks);
 
-        while (RFMotor.getCurrentPosition() < ticks) {};
+        while (RFMotor.getCurrentPosition() < ticks) {
+            opModeIsActive();
+        };
     }
 
     void initalizeMotor(DcMotor motor) {
@@ -54,5 +56,4 @@ public class MainAutonomous extends LinearOpMode {
         motor.setTargetPosition(0);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-
 }

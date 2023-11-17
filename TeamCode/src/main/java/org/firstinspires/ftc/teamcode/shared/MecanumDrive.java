@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.airaganopmodes;
+package org.firstinspires.ftc.teamcode.shared;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

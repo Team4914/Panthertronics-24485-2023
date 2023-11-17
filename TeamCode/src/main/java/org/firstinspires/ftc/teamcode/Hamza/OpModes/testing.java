@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hamzaopmodes;
+package org.firstinspires.ftc.teamcode.Hamza.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -19,9 +19,9 @@ public class testing extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.left_stick_y > 0) {
-            motor.setPower(0.5);
+            motor.setPower(1);
         } else if (gamepad1.left_stick_y < 0) {
-            motor.setPower(-0.5);
+            motor.setPower(-1);
         } else {
             motor.setPower(0);
         }

@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.airaganopmodes;
+package org.firstinspires.ftc.teamcode.Airagan.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hamzaopmodes.Arm;
+// Shared Import
+import org.firstinspires.ftc.teamcode.shared.*;
 
 @TeleOp
-public class MainOpMode extends OpMode {
+public class AiraganOpMode extends OpMode {
     MecanumDrive mecanumDrive;
     //Arm arm;
 
