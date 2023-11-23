@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -57,11 +59,16 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
     private TfodProcessor tfod;
+    private static final String TFOD_MODEL_ASSET = "cube1.tflite";
 
     /**
      * The variable to store our instance of the vision portal.
      */
     private VisionPortal visionPortal;
+
+    private static final String[] LABELS = {
+            "Cube1",
+    };
 
     @Override
     public void runOpMode() {
@@ -110,7 +117,7 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
         // Create the vision portal the easy way.
         if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
+                hardwareMap.get(WebcamName.class, "Zain"), tfod);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                 BuiltinCameraDirection.BACK, tfod);
