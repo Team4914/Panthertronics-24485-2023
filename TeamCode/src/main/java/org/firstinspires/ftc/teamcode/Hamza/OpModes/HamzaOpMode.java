@@ -12,21 +12,20 @@ import org.firstinspires.ftc.teamcode.shared.*;
 public class HamzaOpMode extends OpMode {
     MecanumDrive mecanumDrive;
     Arm arm;
-
-    DcMotor hangRopeMotor;
-    DcMotor rollerMotor;
-    Servo hangArmServo;
+    Hanger hanger;
+    Roller roller;
 
 
     @Override
     public void init() {
         mecanumDrive = new MecanumDrive(this);
         arm = new Arm(this);
+        hanger = new Hanger(this);
+        roller = new Roller(this);
 
         //hangRopeMotor = hardwareMap.get(DcMotor.class, "hangMotor");
         //hangArmServo = hardwareMap.get(Servo.class, "hangServo");
 
-        rollerMotor = hardwareMap.get(DcMotor.class, "a");
 
         telemetry.addData("Hardware: ", "Initialized");
     }
@@ -35,6 +34,8 @@ public class HamzaOpMode extends OpMode {
     public void loop() {
         mecanumDrive.update();
         arm.update();
+        hanger.update();
+        roller.update();
         /*
         if (gamepad1.dpad_up) {
             hangRopeMotor.setPower(1);
@@ -51,8 +52,5 @@ public class HamzaOpMode extends OpMode {
             hangArmServo.setPosition(0); // Temp Open
         }
         */
-        if (gamepad1.a) {
-            rollerMotor.setPower(1);
-        }
     }
 }
