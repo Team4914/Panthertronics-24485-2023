@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode.Hamza.OpModes;
+package org.firstinspires.ftc.teamcode.Airagan.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hanger {
-    public static double HANG_SERVO_DOWN = 0.6;
+    public static double HANG_SERVO_DOWN = 0.3;
     public static double HANG_SERVO_UP = 1;
-
 
     OpMode opmode;
 

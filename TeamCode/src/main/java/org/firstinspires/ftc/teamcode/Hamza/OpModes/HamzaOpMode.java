@@ -11,6 +11,7 @@ public class HamzaOpMode extends OpMode {
     Arm arm;
     Hanger hanger;
     Roller roller;
+    Launcher launcher;
 
 
     @Override
@@ -18,7 +19,8 @@ public class HamzaOpMode extends OpMode {
         mecanumDrive = new MecanumDrive(this);
         //arm = new Arm(this);
         hanger = new Hanger(this);
-        roller = new Roller(this);
+        //roller = new Roller(this);
+        launcher = new Launcher(this);
 
         //hangRopeMotor = hardwareMap.get(DcMotor.class, "hangMotor");
         //hangArmServo = hardwareMap.get(Servo.class, "hangServo");
@@ -32,6 +34,9 @@ public class HamzaOpMode extends OpMode {
         mecanumDrive.update();
         //arm.update();
         hanger.update();
+        launcher.update();
+
+
         //roller.update();
         /*
         if (gamepad1.dpad_up) {
