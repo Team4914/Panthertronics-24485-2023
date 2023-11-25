@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class
-Arm {
+public class Arm {
     //final static double WRIST_OPEN = 0.8;
     //final static double WRIST_CLOSED = 0.2;
     final static double WRIST_SPEED = 0.005;

@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.shared.*;
 public class testing2Airagan extends OpMode {
     Servo servo;
     DcMotor motor;
+    int power = 0;
     @Override
     public void init() {
         //servo = hardwareMap.get(Servo.class, "a");
@@ -24,16 +25,20 @@ public class testing2Airagan extends OpMode {
     // Motor Testing
     @Override
     public void loop() {
-        if (gamepad1.dpad_up) {
-            motor.setPower(1);
+        if (gamepad1.a) {
+            power = 1;
+            telemetry.addData("Key", "a");
             //servo.setPosition(0);
         }
-        else if (gamepad1.dpad_down) {
-            motor.setPower(-1);
+        else if (gamepad1.b) {
+            power = -1;
             //servo.setPosition(1);
+            telemetry.addData("Key", "b");
         }
         else {
-            motor.setPower(0);
+            power = 0;
         }
+        motor.setPower(power);
+        telemetry.addData("Power", power);
     }
 }
