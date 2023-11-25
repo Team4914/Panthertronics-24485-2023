@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.Hamza.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 // Shared Import
 import org.firstinspires.ftc.teamcode.shared.*;
@@ -19,7 +16,7 @@ public class HamzaOpMode extends OpMode {
     @Override
     public void init() {
         mecanumDrive = new MecanumDrive(this);
-        arm = new Arm(this);
+        //arm = new Arm(this);
         hanger = new Hanger(this);
         roller = new Roller(this);
 
@@ -33,9 +30,9 @@ public class HamzaOpMode extends OpMode {
     @Override
     public void loop() {
         mecanumDrive.update();
-        arm.update();
+        //arm.update();
         hanger.update();
-        roller.update();
+        //roller.update();
         /*
         if (gamepad1.dpad_up) {
             hangRopeMotor.setPower(1);

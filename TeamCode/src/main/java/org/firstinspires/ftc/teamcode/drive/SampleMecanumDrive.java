@@ -299,7 +299,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate; // servo ports on the bottom
         // Change if we change control hub orientation
     }
 

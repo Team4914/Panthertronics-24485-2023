@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hanger {
+    public static double HANG_SERVO_DOWN = 0.3;
+    public static double HANG_SERVO_UP = 1;
+
     OpMode opmode;
 
     Servo liftServo;
@@ -22,10 +25,10 @@ public class Hanger {
     // Separating update functions for each component for simplify debugging;
     private void updateServo() {
         if (opmode.gamepad1.dpad_left) {
-            liftServo.setPosition(0);
+            liftServo.setPosition(HANG_SERVO_DOWN);
         }
         else if (opmode.gamepad1.dpad_right) {
-            liftServo.setPosition(1);
+            liftServo.setPosition(HANG_SERVO_UP);
         }
     }
 

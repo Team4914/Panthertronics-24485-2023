@@ -40,15 +40,15 @@ public class HamzaAutonOpMode extends OpMode {
     @Override
     public void start() {
 
-//        int dist = 4*12;
-//        double tireCircumference = Math.PI * TIRE_DIAMETER_INCHES;
-//        double rotations = dist / tireCircumference;
-//        int ticks = (int) (rotations * TICKS_PER_ROTATION);
+        int dist = 4*12;
+        double tireCircumference = Math.PI * TIRE_DIAMETER_INCHES;
+        double rotations = dist / tireCircumference;
+        int ticks = (int) (rotations * TICKS_PER_ROTATION);
 
-        //RFMotor.setTargetPosition(ticks);
-        //RBMotor.setTargetPosition(ticks);
-        //LFMotor.setTargetPosition(ticks);
-        //LBMotor.setTargetPosition(ticks);
+        RFMotor.setTargetPosition(ticks);
+        RBMotor.setTargetPosition(ticks);
+        LFMotor.setTargetPosition(ticks);
+        LBMotor.setTargetPosition(ticks);
 
         //while (opModeIsActive()) {
         //while (RFMotor.getCurrentPosition() < ticks) {
@@ -56,8 +56,6 @@ public class HamzaAutonOpMode extends OpMode {
 
         //}
         //}
-
-
     }
 
     @Override

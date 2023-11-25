@@ -36,6 +36,7 @@ import java.util.List;
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 1; // in
+    public static double PERP_WHEEL_RADIUS = 1.5; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double PARALLEL_X = -1; //-5; //  -5
@@ -63,10 +64,15 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "left_back_drive"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
+        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    }
+
+    public static double encoderTicksToInchesOtherRadius(double ticks) {
+        return PERP_WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
     @Override
@@ -84,7 +90,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public List<Double> getWheelPositions() {
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCurrentPosition()),
-                encoderTicksToInches(perpendicularEncoder.getCurrentPosition())
+                encoderTicksToInchesOtherRadius(perpendicularEncoder.getCurrentPosition())
         );
     }
 
@@ -97,7 +103,19 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCorrectedVelocity()),
-                encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity())
+                encoderTicksToInchesOtherRadius(perpendicularEncoder.getCorrectedVelocity())
         );
     }
 }
+
+//class EncoderDiffRadius extends Encoder {
+//    double radius;
+//
+//    public EncoderDiffRadius(DcMotorEx motor, double radius) {
+//        super(motor);
+//    }
+//
+//    public double getCurrentPosition() {
+//        return super.getCurrentPosition();
+//    }
+//}
