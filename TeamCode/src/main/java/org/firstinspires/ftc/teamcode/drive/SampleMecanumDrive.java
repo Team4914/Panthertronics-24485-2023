@@ -54,7 +54,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-    public class SampleMecanumDrive extends MecanumDrive {
+public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
@@ -299,8 +299,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate; // servo ports on the bottom
-        // Change if we change control hub orientation
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate; // z-axis points up (heading/yaw)
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

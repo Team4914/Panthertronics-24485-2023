@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 // Shared Import
-import org.firstinspires.ftc.teamcode.Hamza.OpModes.Launcher;
+
 import org.firstinspires.ftc.teamcode.shared.*;
 
 @TeleOp
@@ -23,7 +23,7 @@ public class AiraganOpMode extends OpMode {
         mecanumDrive = new MecanumDrive(this);
         //arm = new Arm(this);
 
-        hanger = new Hanger(this);
+        //hanger = new Hanger(this);
 
 
 
@@ -38,9 +38,9 @@ public class AiraganOpMode extends OpMode {
 
 
 
-        + = new Launcher(this);
+        //+ = new Launcher(this);
 
-        motor = hardwareMap.get(DcMotor.class, "hangMotor");
+        //motor = hardwareMap.get(DcMotor.class, "hangMotor");
 
         telemetry.addData("Hardware: ", "Initialized");
     }
@@ -48,8 +48,8 @@ public class AiraganOpMode extends OpMode {
     @Override
     public void loop() {
         mecanumDrive.update();
-        hanger.update();
-        launcher.update();
+        //hanger.update();
+        //launcher.update();
 
         //arm.update();
     }

@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 /*
  * Constants shared between multiple drive types.
@@ -56,9 +56,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.01645;//1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0.0045;
+    public static double kStatic = 0.01;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -88,19 +88,18 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
+    public static double MAX_VEL = 60.52801845916335;
+    public static double MAX_ACCEL = 60.52801845916335;
+    public static double MAX_ANG_VEL = Math.toRadians(192.66666666666669);
+    public static double MAX_ANG_ACCEL = Math.toRadians(192.66666666666669);
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
      */
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR =
-            RevHubOrientationOnRobot.LogoFacingDirection.FORWARD;
+            RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
-            RevHubOrientationOnRobot.UsbFacingDirection.UP;
-
-    public static double MAX_VEL = 60.52801845916335;
-    public static double MAX_ACCEL = 60.52801845916335;
-    public static double MAX_ANG_VEL = Math.toRadians(192.66666666666669);
-    public static double MAX_ANG_ACCEL = Math.toRadians(192.66666666666669);
+            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
 
     public static double encoderTicksToInches(double ticks) {
