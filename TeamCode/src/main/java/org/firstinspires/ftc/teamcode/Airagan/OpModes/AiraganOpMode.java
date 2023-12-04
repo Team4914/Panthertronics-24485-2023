@@ -23,17 +23,7 @@ public class AiraganOpMode extends OpMode {
         mecanumDrive = new MecanumDrive(this);
         //arm = new Arm(this);
 
-        //hanger = new Hanger(this);
-
-
-
-
-
-
-
-
-
-
+        hanger = new Hanger(this);
 
 
 
@@ -48,7 +38,7 @@ public class AiraganOpMode extends OpMode {
     @Override
     public void loop() {
         mecanumDrive.update();
-        //hanger.update();
+        hanger.update();
         //launcher.update();
 
         //arm.update();
