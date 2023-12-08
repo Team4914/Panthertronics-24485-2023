@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.shared;
+package org.firstinspires.ftc.teamcode.parts;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

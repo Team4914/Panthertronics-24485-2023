@@ -1,22 +1,18 @@
-package org.firstinspires.ftc.teamcode.Airagan.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
-// Shared Import
-
-import org.firstinspires.ftc.teamcode.shared.*;
+import org.firstinspires.ftc.teamcode.parts.*;
 
 @TeleOp
 public class AiraganOpMode extends OpMode {
     MecanumDrive mecanumDrive;
     //Arm arm;
     DcMotor motor;
-
     Hanger hanger;
-    Roller roller;
+    //Roller roller;
     Launcher launcher;
 
 
@@ -24,7 +20,7 @@ public class AiraganOpMode extends OpMode {
     public void init() {
         mecanumDrive = new MecanumDrive(this);
         //arm = new Arm(this);
-        roller = new Roller(this);
+        //roller = new Roller(this);
         hanger = new Hanger(this);
 
 
@@ -41,9 +37,8 @@ public class AiraganOpMode extends OpMode {
     public void loop() {
         mecanumDrive.update();
         hanger.update();
-        roller.update();
+        //roller.update();
         //launcher.update();
-
         //arm.update();
     }
 }

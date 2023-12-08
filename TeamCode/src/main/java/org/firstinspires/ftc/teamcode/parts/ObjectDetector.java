@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.shared;
+package org.firstinspires.ftc.teamcode.parts;
 
 import android.util.Size;
 
