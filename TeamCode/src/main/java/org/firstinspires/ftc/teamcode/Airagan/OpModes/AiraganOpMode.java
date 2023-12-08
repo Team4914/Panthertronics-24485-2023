@@ -16,13 +16,15 @@ public class AiraganOpMode extends OpMode {
     DcMotor motor;
 
     Hanger hanger;
+    Roller roller;
     Launcher launcher;
+
 
     @Override
     public void init() {
         mecanumDrive = new MecanumDrive(this);
         //arm = new Arm(this);
-
+        roller = new Roller(this);
         hanger = new Hanger(this);
 
 
@@ -39,6 +41,7 @@ public class AiraganOpMode extends OpMode {
     public void loop() {
         mecanumDrive.update();
         hanger.update();
+        roller.update();
         //launcher.update();
 
         //arm.update();
