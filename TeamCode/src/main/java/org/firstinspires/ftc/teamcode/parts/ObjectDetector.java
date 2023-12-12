@@ -15,6 +15,9 @@ import java.util.List;
 public class ObjectDetector {
     OpMode opMode;
 
+    public static final double CONFIDENCE_REQUIRED = 0.7;
+    public static final int TAPE_BORDER = 300;
+
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
@@ -24,7 +27,7 @@ public class ObjectDetector {
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
             "Cube1",
-    };
+    };;
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
@@ -47,9 +50,9 @@ public class ObjectDetector {
     }
     public void update() {
 
-                // Save CPU resources; can resume streaming when needed.
-                //if (gamepad1.dpad_down) {
-                //    visionPortal.stopStreaming();
+        // Save CPU resources; can resume streaming when needed.
+        //if (gamepad1.dpad_down) {
+        //    visionPortal.stopStreaming();
 //                } else if (gamepad1.dpad_up) {
 //                    visionPortal.resumeStreaming();
 //                }
@@ -130,15 +133,14 @@ public class ObjectDetector {
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
     private void telemetryTfod() {
-
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        List<Recognition> currentRecognitions = getRecognitions();
         opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-
+            decidePosition(x,y, recognition.getConfidence());
             opMode.telemetry.addData(""," ");
             opMode.telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             opMode.telemetry.addData("- Position", "%.0f / %.0f", x, y);
@@ -150,6 +152,22 @@ public class ObjectDetector {
 
     }   // end method telemetryTfod()
 
+    /* requirements: bot is placed on the starting tile, touching the wall,
+            with the right wheels touching the right edge of the tile;
+            camera is mounted on the bottom right side of the bot
+
+        returns: 0 if team prop is on the left marker
+            1 for middle
+            2 for right
+     */
+    public static int decidePosition(double x, double y, double confidence){
+        if (confidence < CONFIDENCE_REQUIRED) return 0; // left
+
+        if(x > TAPE_BORDER)
+            return 2; // right
+        else
+            return 1; // center
+    }
     public void close() {
         visionPortal.close();
     }

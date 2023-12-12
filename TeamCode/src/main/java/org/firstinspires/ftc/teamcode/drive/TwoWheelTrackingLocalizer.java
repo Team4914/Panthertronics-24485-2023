@@ -42,8 +42,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double PARALLEL_X = -2;
     public static double PARALLEL_Y = 6;
 
-    public static double PERPENDICULAR_X = -8; //
-    public static double PERPENDICULAR_Y = 1.2; // may be slightly inaccurate
+    public static double PERPENDICULAR_X = -2; //
+    public static double PERPENDICULAR_Y = -1; // may be slightly inaccurate
 
     public static double X_MULTIPLIER = 1;
     public static double Y_MULTIPLIER = 1;
@@ -67,7 +67,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "left_front_drive"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
-        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
+        //perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
