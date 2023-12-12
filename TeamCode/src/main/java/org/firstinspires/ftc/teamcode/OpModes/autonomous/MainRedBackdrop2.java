@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.*;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -18,19 +19,22 @@ import java.util.Comparator;
 import java.util.List;
 
 @Autonomous
-public class MainRedBackdrop extends LinearOpMode {
+public class MainRedBackdrop2 extends OpMode {
     final static double ROBOT_WIDTH = 16.75;
     final static double ROBOT_LENGTH = 17;
     final static double ROBOT_CENTER_X = ROBOT_WIDTH/2;
     final static double ROBOT_CENTER_Y = ROBOT_LENGTH/2;
+
+    SampleMecanumDrive drive;
+    ObjectDetector objD;
     @Override
-    public void runOpMode() {
+    public void init() {
         // Initialization
         telemetry.addData("Testing", 0);
-        ObjectDetector objD = new ObjectDetector(this);
+        objD = new ObjectDetector(this);
         telemetry.addData("Testing", 0.5);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
         drive.setPoseEstimate(startPose);
@@ -38,14 +42,19 @@ public class MainRedBackdrop extends LinearOpMode {
         Trajectory path = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(24, -24), 0)
                 .build();
-
-
-        waitForStart();
+    }
+    @Override
+    public void start() {
         telemetry.addData("Testing", 1);
-        if(isStopRequested()) return;
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        sleep(5000);
-
+    @Override
+    public void loop() {
 
         List<Recognition> currentRecognitions = objD.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
@@ -68,7 +77,11 @@ public class MainRedBackdrop extends LinearOpMode {
         telemetry.addData("Testing", 3);
         telemetry.addData("Detected Team Prop Position: ", pos);
 
-        sleep(5000);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         objD.close();
 
         //drive.followTrajectory(path);
