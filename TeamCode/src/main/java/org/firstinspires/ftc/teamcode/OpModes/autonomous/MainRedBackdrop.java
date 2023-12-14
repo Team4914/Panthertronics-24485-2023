@@ -26,9 +26,7 @@ public class MainRedBackdrop extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialization
-        telemetry.addData("Testing", 0);
         ObjectDetector objD = new ObjectDetector(this);
-        telemetry.addData("Testing", 0.5);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -41,22 +39,17 @@ public class MainRedBackdrop extends LinearOpMode {
 
 
         waitForStart();
-        telemetry.addData("Testing", 1);
         if(isStopRequested()) return;
 
-        sleep(5000);
-
-
         List<Recognition> currentRecognitions = objD.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
+        addTelemetry("# Objects Detected", currentRecognitions.size());
 
         Collections.sort(currentRecognitions, Comparator.comparingDouble(Recognition::getConfidence));
 
         // if (recognition.getLabel() == team prop) TODO: check if right type
 
         int pos = 0; // default; undetected=left
-        telemetry.addData("Testing", 2)
-        ;
+
         if (currentRecognitions.size() != 0) {
             Recognition recognition = currentRecognitions.get(currentRecognitions.size() - 1);
 
@@ -65,13 +58,25 @@ public class MainRedBackdrop extends LinearOpMode {
 
             pos = ObjectDetector.decidePosition(x, y, recognition.getConfidence());
         }
-        telemetry.addData("Testing", 3);
-        telemetry.addData("Detected Team Prop Position: ", pos);
+        addTelemetry("Detected Team Prop Position: ", pos);
 
-        sleep(5000);
         objD.close();
 
         //drive.followTrajectory(path);
+    }
+
+    // Telemetry
+    private void addTelemetry(String key, String val) {
+        telemetry.addData(key, val);
+        telemetry.update();
+    }
+    private void addTelemetry(String key, int val) {
+        telemetry.addData(key, val);
+        telemetry.update();
+    }
+    private void addTelemetry(String key, double val) {
+        telemetry.addData(key, val);
+        telemetry.update();
     }
 }
 

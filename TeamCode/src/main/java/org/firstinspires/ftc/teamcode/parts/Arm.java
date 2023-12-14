@@ -6,27 +6,28 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
-    final static double ELBOW_SPEED = 0.7;
+    //final static double WRIST_OPEN = 0.8;
+    //final static double WRIST_CLOSED = 0.2;
+    final static double CLAW_OPEN = 0.4;
+    final static double CLAW_CLOSED = 1;
 
     OpMode opMode;
 
-    DcMotor elbowMotor;
-    DcMotor intakeMotor;
+    public DcMotor elbowMotorLeft, elbowMotorRight;
+    public Servo clawLeft, clawRight;
 
-    int cnt;
-
-    double wristPos = 0;
+    public int cycleLeft = -1, cycleRight = -1;
 
     public Arm(OpMode opMode) {
         this.opMode = opMode;
 
-        elbowMotor = opMode.hardwareMap.get(DcMotor.class, "elbow");
+        elbowMotorLeft = opMode.hardwareMap.get(DcMotor.class, "elbowLeft");
+        elbowMotorRight = opMode.hardwareMap.get(DcMotor.class, "elbowRight");
 
-        intakeMotor = opMode.hardwareMap.get(DcMotor.class, "intakeMotor");
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        clawLeft = opMode.hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = opMode.hardwareMap.get(Servo.class, "clawRight");
 
-
-        //elbowMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        elbowMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         opMode.telemetry.addData("Arm: ", "Initialized");
     }
 
@@ -36,15 +37,35 @@ public class Arm {
         elbowMotorPower -= opMode.gamepad1.left_trigger;
         elbowMotorPower += opMode.gamepad1.right_trigger;
 
-        elbowMotor.setPower(elbowMotorPower * ELBOW_SPEED);
+        elbowMotorLeft.setPower(elbowMotorPower);
+        elbowMotorRight.setPower(elbowMotorPower);
 
         opMode.telemetry.addData("Elbow Power: ", elbowMotorPower);
 
-        if (opMode.gamepad1.a) {
-            intakeMotor.setPower(1);
+        // Claw
+        if (opMode.gamepad1.x) {
+            cycleLeft = (cycleLeft + 1) % 2;
+
+            if (cycleLeft == 0) {
+                clawLeft.setPosition(CLAW_CLOSED);
+                opMode.telemetry.addData("Claw Left", "CLOSED");
+            }
+            else {
+                clawLeft.setPosition(CLAW_OPEN);
+                opMode.telemetry.addData("Claw Left", "OPEN");
+            }
         }
-        else {
-            intakeMotor.setPower(0);
+        else if (opMode.gamepad1.y) {
+            cycleRight = (cycleRight + 1) % 2;
+
+            if (cycleRight == 0) {
+                clawRight.setPosition(CLAW_CLOSED);
+                opMode.telemetry.addData("Claw Right", "Closed");
+            }
+            else {
+                clawRight.setPosition(CLAW_OPEN);
+                opMode.telemetry.addData("Claw Right", "OPEN");
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ public class MainRedBackdrop2 extends OpMode {
 
     SampleMecanumDrive drive;
     ObjectDetector objD;
+    boolean isDone = false;
     @Override
     public void init() {
         // Initialization
@@ -46,45 +47,37 @@ public class MainRedBackdrop2 extends OpMode {
     @Override
     public void start() {
         telemetry.addData("Testing", 1);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public void loop() {
+        while (!isDone) {
+            List<Recognition> currentRecognitions = objD.getRecognitions();
+            telemetry.addData("# Objects Detected", currentRecognitions.size());
 
-        List<Recognition> currentRecognitions = objD.getRecognitions();
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
+            Collections.sort(currentRecognitions, Comparator.comparingDouble(Recognition::getConfidence));
 
-        Collections.sort(currentRecognitions, Comparator.comparingDouble(Recognition::getConfidence));
+            // if (recognition.getLabel() == team prop) TODO: check if right type
 
-        // if (recognition.getLabel() == team prop) TODO: check if right type
+            int pos = 0; // default; undetected=left
+            telemetry.addData("Testing", 2);
+            if (currentRecognitions.size() != 0) {
+                Recognition recognition = currentRecognitions.get(currentRecognitions.size() - 1);
 
-        int pos = 0; // default; undetected=left
-        telemetry.addData("Testing", 2)
-        ;
-        if (currentRecognitions.size() != 0) {
-            Recognition recognition = currentRecognitions.get(currentRecognitions.size() - 1);
+                double x = (recognition.getLeft() + recognition.getRight()) / 2;
+                double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-            double x = (recognition.getLeft() + recognition.getRight()) / 2;
-            double y = (recognition.getTop() + recognition.getBottom()) / 2;
+                pos = ObjectDetector.decidePosition(x, y, recognition.getConfidence());
+            }
+            telemetry.addData("Testing", 3);
+            telemetry.addData("Detected Team Prop Position: ", pos);
 
-            pos = ObjectDetector.decidePosition(x, y, recognition.getConfidence());
+
+            objD.close();
+
+            //drive.followTrajectory(path);
+            isDone = true;
         }
-        telemetry.addData("Testing", 3);
-        telemetry.addData("Detected Team Prop Position: ", pos);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        objD.close();
-
-        //drive.followTrajectory(path);
     }
 }
 
