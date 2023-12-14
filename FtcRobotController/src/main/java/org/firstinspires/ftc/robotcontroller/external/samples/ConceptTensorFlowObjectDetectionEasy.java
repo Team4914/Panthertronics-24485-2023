@@ -58,7 +58,8 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
     private TfodProcessor tfod;
-    private static final String TFOD_MODEL_ASSET = "cube1.tflite";
+    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/newModel.tflite";
+    private static final String TFOD_MODEL_ASSET = "newModel.tflite";
 
     /**
      * The variable to store our instance of the vision portal.
@@ -111,7 +112,25 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
     private void initTfod() {
 
         // Create the TensorFlow processor the easy way.
-        tfod = TfodProcessor.easyCreateWithDefaults();
+        tfod = new TfodProcessor.Builder()
+
+                // With the following lines commented out, the default TfodProcessor Builder
+                // will load the default model for the season. To define a custom model to load,
+                // choose one of the following:
+                //   Use setModelAssetName() if the custom TF Model is built in as an asset (AS only).
+                //   Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
+                .setModelAssetName(TFOD_MODEL_ASSET)
+                .setModelFileName(TFOD_MODEL_FILE)
+
+                // The following default settings are available to un-comment and edit as needed to
+                // set parameters for custom models.
+                .setModelLabels(LABELS)
+                .setIsModelTensorFlow2(true)
+                .setIsModelQuantized(true)
+                .setModelInputSize(300)
+                .setModelAspectRatio(16.0 / 9.0)
+
+                .build();
 
         // Create the vision portal the easy way.
         if (USE_WEBCAM) {

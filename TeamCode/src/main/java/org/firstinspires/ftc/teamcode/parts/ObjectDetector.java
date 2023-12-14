@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.List;
@@ -201,11 +203,11 @@ public class ObjectDetector {
         return new Vector2d(cameraX, cameraY);
     }
     
-    public static Vector2d recognitionToFieldPos(Recognition recognition, double screenWidth, double realInches, Pose2d cameraPose) {
-        double width = recognition.getImageWidth();
-        double depth = screenWidthToDepth(width, realInches);
-        
-        double imgX = (recognition.getLeft() + recognition.getRight())/2 - screenWidth/2;
-        return imageXToFieldPos(imgX, depth, cameraPos);
-    }
+//    public static Vector2d recognitionToFieldPos(Recognition recognition, double screenWidth, double realInches, Pose2d cameraPose) {
+//        double width = recognition.getImageWidth();
+//        double depth = screenWidthToDepth(width, realInches);
+//
+//        double imgX = (recognition.getLeft() + recognition.getRight())/2 - screenWidth/2;
+//        return imageXToFieldPos(imgX, depth, cameraPos);
+//    }
 }
