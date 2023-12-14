@@ -172,5 +172,40 @@ public class ObjectDetector {
         visionPortal.close();
     }
 
-    //public static double coordsDistToDist(double )
+    static final double SCREEN_DEPTH = 10; 
+    
+    /*
+        All of these methods assume camera is parallel to the ground, camera height is close to that of the object, and the object is not rotated
+    */
+    
+    public static double imageWidthToDepth(double imagePixels, double realInches) {
+        return SCREEN_DEPTH / imagePixels * realInches;
+    }
+    
+    // screenX: center of picture = 0; increasing going right
+    public static Vector2d imageXToFieldPos(double imageX, double fieldDepth, Pose2d cameraPose) {
+        double perpOffset = fieldDepth / SCREEN_DEPTH * imageX;
+        
+        double cameraX = cameraPose.getX();
+        double cameraY = cameraPose.getY();
+        double cameraHeading = cameraPose.getHeading();
+        
+        // move forward by fieldDepth units
+        cameraX += Math.cos(cameraHeading) * fieldDepth;
+        cameraY += Math.sin(cameraHeading) * fieldDepth;
+        
+        // move right by perpOffset units (heading - 90)
+        cameraX += Math.sin(cameraHeading) * perpOffset;
+        cameraY += -Math.cos(cameraHeading) * perpOffset;
+        
+        return new Vector2d(cameraX, cameraY);
+    }
+    
+    public static Vector2d recognitionToFieldPos(Recognition recognition, double screenWidth, double realInches, Pose2d cameraPose) {
+        double width = recognition.getImageWidth();
+        double depth = screenWidthToDepth(width, realInches);
+        
+        double imgX = (recognition.getLeft() + recognition.getRight())/2 - screenWidth/2;
+        return imageXToFieldPos(imgX, depth, cameraPos);
+    }
 }
