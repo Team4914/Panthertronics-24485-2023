@@ -188,19 +188,8 @@ public class ObjectDetector {
     public static Vector2d imageXToFieldPos(double imageX, double fieldDepth, Pose2d cameraPose) {
         double perpOffset = fieldDepth / SCREEN_DEPTH * imageX;
         
-        double cameraX = cameraPose.getX();
-        double cameraY = cameraPose.getY();
-        double cameraHeading = cameraPose.getHeading();
-        
-        // move forward by fieldDepth units
-        cameraX += Math.cos(cameraHeading) * fieldDepth;
-        cameraY += Math.sin(cameraHeading) * fieldDepth;
-        
-        // move right by perpOffset units (heading - 90)
-        cameraX += Math.sin(cameraHeading) * perpOffset;
-        cameraY += -Math.cos(cameraHeading) * perpOffset;
-        
-        return new Vector2d(cameraX, cameraY);
+        Vector2d offset = new Vector2d(perpOffset, fieldDepth).rotated(cameraHeading);
+        return cameraPose.vec().plus(offset);
     }
     
 //    public static Vector2d recognitionToFieldPos(Recognition recognition, double screenWidth, double realInches, Pose2d cameraPose) {
