@@ -11,11 +11,11 @@ public class Arm2 {
     final static double CLAW_CLOSED = 1;
 
     OpMode opMode;
-    public DcMotor elbowMotorLeft, elbowMotorRight;
-    public Servo clawLeft, clawRight, wrist;
+    private DcMotor elbowMotorLeft, elbowMotorRight;
+    private Servo clawLeft, clawRight, wrist;
 
-    public int cycleLeft = -1, cycleRight = -1;
-    public boolean leftPressed = false, rightPressed = false;
+    private int cycleLeft = -1, cycleRight = -1;
+    private boolean leftPressed = false, rightPressed = false;
 
     // Elbow Positions
     public static int ELBOW_GROUND = -200;
@@ -26,6 +26,14 @@ public class Arm2 {
     public static double WRIST_GROUND = 0.5;
     public static double WRIST_BOARD = 0.4;
     public static double WRIST_STORAGE = 0.8;
+
+    // States
+    public static int STORAGE_STATE = 0;
+    public static int BOARD_STATE = 1;
+    public static int GROUND_STATE = 2;
+
+    static int[] ELBOW_STATE_POS = { ELBOW_STORAGE, ELBOW_BOARD, ELBOW_GROUND };
+    static double[] WRIST_STATE_POS = { WRIST_STORAGE, WRIST_BOARD, WRIST_GROUND };
 
     int lastElbowTargetPos = 0;
 
@@ -58,13 +66,11 @@ public class Arm2 {
 
     public void update() {
         if (opMode.gamepad1.left_trigger > 0) {
-            setElbowTargetPos(ELBOW_GROUND);
-            wrist.setPosition(WRIST_GROUND);
+            setState(Arm2.GROUND_STATE);
         }
 
         else if (opMode.gamepad1.right_trigger > 0) {
-            setElbowTargetPos(ELBOW_BOARD);
-            wrist.setPosition(WRIST_BOARD);
+            setState(Arm2.BOARD_STATE);
         }
 
         // Claw
@@ -134,5 +140,27 @@ public class Arm2 {
         opMode.telemetry.addData("Moving Elbow From: ", curPos);
         opMode.telemetry.addData("Moving Elbow To: ", pos);
         moveElbow(move);
+    }
+
+//    public void setWristPosition(double pos) {
+//        wrist.setPosition(pos);
+//    }
+
+    public void setState(int state) {
+        setElbowTargetPos(ELBOW_STATE_POS[state]);
+        wrist.setPosition(WRIST_STATE_POS[state]);
+    }
+
+    public void openClawLeft() {
+        clawLeft.setPosition(CLAW_OPEN);
+    }
+    public void closeClawLeft() {
+        clawLeft.setPosition(CLAW_CLOSED);
+    }
+    public void openClawRight() {
+        clawLeft.setPosition(CLAW_OPEN);
+    }
+    public void closeClawRight () {
+        clawLeft.setPosition(CLAW_CLOSED);
     }
 }

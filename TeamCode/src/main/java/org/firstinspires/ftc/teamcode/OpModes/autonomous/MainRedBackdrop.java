@@ -27,19 +27,28 @@ public class MainRedBackdrop extends LinearOpMode {
     public void runOpMode() {
         // Initialization
         ObjectDetector objD = new ObjectDetector(this);
+        Arm2 arm = new Arm2(this);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
         drive.setPoseEstimate(startPose);
 
-        Trajectory path = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(24, -24), 0)
+        Trajectory path1 = drive.trajectoryBuilder(startPose)
+                .splineTo(new Vector2d(24, -18), 0)
                 .build();
 
+        Trajectory path2 = drive.trajectoryBuilder(path1.end())
+                .back(6)
+                .splineTo(new Vector2d(30, 36 - ROBOT_WIDTH - 1), 0)
+                        .build();
 
         waitForStart();
         if(isStopRequested()) return;
+
+        arm.closeClawLeft();
+        arm.closeClawRight();
+
         /*
         List<Recognition> currentRecognitions = objD.getRecognitions();
         addTelemetry("# Objects Detected", currentRecognitions.size());
@@ -62,7 +71,18 @@ public class MainRedBackdrop extends LinearOpMode {
 
         objD.close();
         */
-        drive.followTrajectory(path);
+        drive.followTrajectory(path1);
+
+        // drop off pixel
+        arm.setState(Arm2.BOARD_STATE);
+
+        arm.openClawLeft();
+        arm.openClawRight();
+
+        drive.followTrajectory(path2);
+
+        // reset arm
+        arm.setState(Arm2.STORAGE_STATE);
     }
 
     // Telemetry
