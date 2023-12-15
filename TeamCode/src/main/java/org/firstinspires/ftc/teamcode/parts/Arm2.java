@@ -12,7 +12,7 @@ public class Arm2 {
 
     OpMode opMode;
     public DcMotor elbowMotorLeft, elbowMotorRight;
-    public Servo clawLeft, clawRight;
+    public Servo clawLeft, clawRight, wrist;
 
     public int cycleLeft = -1, cycleRight = -1;
     public boolean leftPressed = false, rightPressed = false;
@@ -34,6 +34,7 @@ public class Arm2 {
 
         elbowMotorLeft = opMode.hardwareMap.get(DcMotor.class, "elbowLeft");
         elbowMotorRight = opMode.hardwareMap.get(DcMotor.class, "elbowRight");
+        wrist = opMode.hardwareMap.get(Servo.class, "wrist");
 
         elbowMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -58,10 +59,12 @@ public class Arm2 {
     public void update() {
         if (opMode.gamepad1.left_trigger > 0) {
             setElbowTargetPos(ELBOW_GROUND);
+            wrist.setPosition(WRIST_GROUND);
         }
 
         else if (opMode.gamepad1.right_trigger > 0) {
             setElbowTargetPos(ELBOW_BOARD);
+            wrist.setPosition(WRIST_BOARD);
         }
 
         // Claw
@@ -105,7 +108,8 @@ public class Arm2 {
     }
 
     public void reset() {
-        moveElbow(200); // Hardcoded value to be called in seperate opmode
+        moveElbow(-ELBOW_GROUND); // Hardcoded value to be called in seperate opmode
+        wrist.setPosition(WRIST_STORAGE);
     }
 
     public void moveElbow(int dist) {
