@@ -40,7 +40,7 @@ public class MainRedBackdrop extends LinearOpMode {
 
         waitForStart();
         if(isStopRequested()) return;
-
+        /*
         List<Recognition> currentRecognitions = objD.getRecognitions();
         addTelemetry("# Objects Detected", currentRecognitions.size());
 
@@ -61,8 +61,8 @@ public class MainRedBackdrop extends LinearOpMode {
         addTelemetry("Detected Team Prop Position: ", pos);
 
         objD.close();
-
-        //drive.followTrajectory(path);
+        */
+        drive.followTrajectory(path);
     }
 
     // Telemetry
