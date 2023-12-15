@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Autonomous
-public class MainRedBackdrop extends LinearOpMode {
+public class ObjectDetectionTester extends LinearOpMode {
     final static double ROBOT_WIDTH = 16.75;
     final static double ROBOT_LENGTH = 17;
     final static double ROBOT_CENTER_X = ROBOT_WIDTH/2;
@@ -55,7 +55,7 @@ public class MainRedBackdrop extends LinearOpMode {
         if(isStopRequested()) return;
 
         List<Recognition> currentRecognitions = objD.getRecognitions();
-        addTelemetry("# Objects Detected", currentRecognitions.size());
+        telemetry.addData("# Objects Detected", currentRecognitions.size());
 
         Collections.sort(currentRecognitions, Comparator.comparingDouble(Recognition::getConfidence));
 
@@ -68,7 +68,7 @@ public class MainRedBackdrop extends LinearOpMode {
                 recognition,
                 600,
                 2.25,
-                getCameraPose(startingPose)
+                getCameraPose(startPose)
             ));
             telemetry.update();
         }

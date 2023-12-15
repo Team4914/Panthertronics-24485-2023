@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -186,15 +188,15 @@ public class ObjectDetector {
     public static Vector2d imageXToFieldPos(double imageX, double fieldDepth, Pose2d cameraPose) {
         double perpOffset = fieldDepth / SCREEN_DEPTH * imageX;
         
-        Vector2d offset = new Vector2d(perpOffset, fieldDepth).rotated(cameraHeading);
+        Vector2d offset = new Vector2d(perpOffset, fieldDepth).rotated(cameraPose.getHeading());
         return cameraPose.vec().plus(offset);
     }
     
     public static Vector2d recognitionToFieldPos(Recognition recognition, double screenWidth, double realInches, Pose2d cameraPose) {
         double width = recognition.getImageWidth();
-        double depth = screenWidthToDepth(width, realInches);
+        double depth = imageWidthToDepth(width, realInches);
         
         double imgX = (recognition.getLeft() + recognition.getRight())/2 - screenWidth/2;
-        return imageXToFieldPos(imgX, depth, cameraPos);
+        return imageXToFieldPos(imgX, depth, cameraPose);
     }
 }
