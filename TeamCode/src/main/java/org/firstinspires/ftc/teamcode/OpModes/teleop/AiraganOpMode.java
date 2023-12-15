@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.parts.*;
 @TeleOp
 public class AiraganOpMode extends OpMode {
     MecanumDrive mecanumDrive;
-    Arm arm;
+    Arm2 arm;
     DcMotor motor;
     Hanger hanger;
     //Roller roller;
@@ -19,7 +19,7 @@ public class AiraganOpMode extends OpMode {
     @Override
     public void init() {
         mecanumDrive = new MecanumDrive(this);
-        arm = new Arm(this);
+        arm = new Arm2(this);
         //roller = new Roller(this);
         hanger = new Hanger(this);
 

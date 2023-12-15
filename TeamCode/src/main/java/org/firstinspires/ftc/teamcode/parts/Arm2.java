@@ -18,15 +18,16 @@ public class Arm2 {
     public boolean leftPressed = false, rightPressed = false;
 
     // Elbow Positions
-    public static int ELBOW_GROUND = -100;
-    public static int ELBOW_BOARD = 100;
-    public static int ELBOW_STORAGE = 200;
-    public static int ELBOW_GROUND_INITIAL = -200;
+    public static int ELBOW_GROUND = -200;
+    public static int ELBOW_BOARD = -100;
+    public static int ELBOW_STORAGE = 0;
 
     // Wrist Positions
     public static double WRIST_GROUND = 0.5;
     public static double WRIST_BOARD = 0.4;
     public static double WRIST_STORAGE = 0.8;
+
+    int lastElbowTargetPos = 0;
 
     public Arm2(OpMode opMode) {
         this.opMode = opMode;
@@ -56,35 +57,12 @@ public class Arm2 {
 
     public void update() {
         if (opMode.gamepad1.left_trigger > 0) {
-            elbowMotorLeft.setTargetPosition(ELBOW_GROUND);
-            elbowMotorRight.setTargetPosition(ELBOW_GROUND);
-            opMode.telemetry.addData("Trigger", "Down");
-            elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elbowMotorLeft.setPower(0.5);
-            elbowMotorRight.setPower(0.5);
-
-            if (!elbowMotorLeft.isBusy()) {
-                elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
+            setElbowTargetPos(ELBOW_GROUND);
         }
 
         else if (opMode.gamepad1.right_trigger > 0) {
-            elbowMotorLeft.setTargetPosition(ELBOW_BOARD);
-            elbowMotorRight.setTargetPosition(ELBOW_BOARD);
-            opMode.telemetry.addData("Trigger", "Up");
-            elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elbowMotorLeft.setPower(0.5);
-            elbowMotorRight.setPower(0.5);
-
-            if (!elbowMotorLeft.isBusy()) {
-                elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
+            setElbowTargetPos(ELBOW_BOARD);
         }
-
-        opMode.telemetry.addData("Elbow Pos: ", elbowMotorLeft.getCurrentPosition());
 
         // Claw
         if (opMode.gamepad1.x && !leftPressed) {
@@ -126,34 +104,31 @@ public class Arm2 {
         opMode.telemetry.addData("CycleRight", cycleRight);
     }
 
-    public void updateIntial() {
-        if (opMode.gamepad1.left_bumper) {
-            elbowMotorLeft.setTargetPosition(ELBOW_GROUND_INITIAL);
-            elbowMotorRight.setTargetPosition(ELBOW_GROUND_INITIAL);
-            opMode.telemetry.addData("Trigger", "Down");
-            elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elbowMotorLeft.setPower(0.5);
-            elbowMotorRight.setPower(0.5);
+    public void reset() {
+        moveElbow(200); // Hardcoded value to be called in seperate opmode
+    }
 
-            if (!elbowMotorLeft.isBusy()) {
-                elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
+    public void moveElbow(int dist) {
+        elbowMotorLeft.setTargetPosition(dist);
+        elbowMotorRight.setTargetPosition(dist);
+        opMode.telemetry.addData("Moving Elbow By: ", dist);
+        elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbowMotorLeft.setPower(0.5);
+        elbowMotorRight.setPower(0.5);
+
+        if (!elbowMotorLeft.isBusy()) {
+            elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+    }
 
-        else if (opMode.gamepad1.right_trigger > 0) {
-            elbowMotorLeft.setTargetPosition(ELBOW_STORAGE);
-            elbowMotorRight.setTargetPosition(ELBOW_STORAGE);
-            opMode.telemetry.addData("Trigger", "Up");
-            elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            elbowMotorLeft.setPower(0.5);
-            elbowMotorRight.setPower(0.5);
+    public void setElbowTargetPos(int pos) {
+        int curMove = elbowMotorLeft.getCurrentPosition();
+        int curPos = lastElbowTargetPos + curMove;
 
-            if (!elbowMotorLeft.isBusy()) {
-                elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-        }
+        int move = pos - curPos;
+        opMode.telemetry.addData("Moving Elbow From: ", curPos);
+        opMode.telemetry.addData("Moving Elbow To: ", pos);
+        moveElbow(move);
     }
 }
