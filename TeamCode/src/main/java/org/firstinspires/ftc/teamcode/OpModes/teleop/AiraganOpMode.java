@@ -26,7 +26,7 @@ public class AiraganOpMode extends OpMode {
 
 
 
-        //+ = new Launcher(this);
+        launcher = new Launcher(this);
 
         //motor = hardwareMap.get(DcMotor.class, "hangMotor");
 
@@ -42,8 +42,7 @@ public class AiraganOpMode extends OpMode {
     public void loop() {
         mecanumDrive.update();
         hanger.update();
-        //roller.update();
-        //launcher.update();
+        launcher.update();
         arm.update();
     }
 }

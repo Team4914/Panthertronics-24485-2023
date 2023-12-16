@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm2 {
-    final static double CLAW_OPEN = 0.5;
-    final static double CLAW_CLOSED = 1;
+    final static double CLAW_OPEN = 0.67;
+    final static double CLAW_CLOSED = 0.45;
 
     OpMode opMode;
     public DcMotor elbowMotorLeft, elbowMotorRight;
@@ -62,6 +62,7 @@ public class Arm2 {
 
         clawLeft = opMode.hardwareMap.get(Servo.class, "clawLeft");
         clawRight = opMode.hardwareMap.get(Servo.class, "clawRight");
+        clawLeft.setDirection(Servo.Direction.REVERSE);
 
         opMode.telemetry.addData("Arm: ", "Initialized");
     }
@@ -84,15 +85,15 @@ public class Arm2 {
             cycleLeft = (cycleLeft + 1) % 2;
 
             if (cycleLeft == 0) {
-                clawLeft.setPosition(CLAW_CLOSED);
+                closeClawLeft();
                 opMode.telemetry.addData("Claw Left", "CLOSED");
             }
             else {
-                clawLeft.setPosition(CLAW_OPEN);
+                openClawLeft();
                 opMode.telemetry.addData("Claw Left", "OPEN");
             }
         }
-        else {
+        if (!opMode.gamepad1.x) {
             leftPressed = false;
         }
 
@@ -101,15 +102,16 @@ public class Arm2 {
             cycleRight = (cycleRight + 1) % 2;
 
             if (cycleRight == 0) {
-                clawRight.setPosition(CLAW_CLOSED);
+                closeClawRight();
                 opMode.telemetry.addData("Claw Right", "Closed");
             }
             else {
-                clawRight.setPosition(CLAW_OPEN);
+                openClawRight();
                 opMode.telemetry.addData("Claw Right", "OPEN");
             }
         }
-        else {
+
+        if (!opMode.gamepad1.b) {
             rightPressed = false;
         }
 
@@ -173,9 +175,9 @@ public class Arm2 {
         clawLeft.setPosition(CLAW_CLOSED);
     }
     public void openClawRight() {
-        clawLeft.setPosition(CLAW_OPEN);
+        clawRight.setPosition(CLAW_OPEN);
     }
     public void closeClawRight () {
-        clawLeft.setPosition(CLAW_CLOSED);
+        clawRight.setPosition(CLAW_CLOSED);
     }
 }

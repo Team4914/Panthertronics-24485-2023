@@ -18,7 +18,7 @@ public class Launcher {
         if (opMode.gamepad1.y) {
             launchServo.setPosition(0);
         }
-        else if (opMode.gamepad1.b) {
+        else if (opMode.gamepad1.a) {
             launchServo.setPosition(1);
         }
     }

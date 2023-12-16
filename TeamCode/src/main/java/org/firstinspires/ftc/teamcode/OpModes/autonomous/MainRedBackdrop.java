@@ -31,16 +31,16 @@ public class MainRedBackdrop extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
+        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
         drive.setPoseEstimate(startPose);
 
         Trajectory path1 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(24, -18), 0)
+                .splineTo(new Vector2d(48, -36), 0)
                 .build();
 
         Trajectory path2 = drive.trajectoryBuilder(path1.end())
                 .back(6)
-                .splineTo(new Vector2d(30, 36 - ROBOT_WIDTH - 1), 0)
+                .splineTo(new Vector2d(60, -60), 0)
                         .build();
 
         waitForStart();
@@ -76,8 +76,13 @@ public class MainRedBackdrop extends LinearOpMode {
         // drop off pixel
         arm.setState(Arm2.BOARD_STATE);
 
+        while (arm.elbowMotorLeft.isBusy() && opModeIsActive())
+            sleep(10);
+
         arm.openClawLeft();
         arm.openClawRight();
+
+        sleep(1000);
 
         drive.followTrajectory(path2);
 

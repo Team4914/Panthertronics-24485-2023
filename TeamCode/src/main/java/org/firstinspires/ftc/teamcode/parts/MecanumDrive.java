@@ -32,12 +32,13 @@ public class MecanumDrive {
         double vertical; // Front-back motion
         double horizontal; // Left-right motion
         double pivot; // Turn angle
+        double PIVOT_SPEED = 0.5;
 
         /*Depending on what motors are flipped, vertical must be negative or positive.
          * Test with robot, and change to positive if necessary*/
         vertical = -opMode.gamepad1.left_stick_y;
         horizontal = opMode.gamepad1.left_stick_x;
-        pivot = opMode.gamepad1.right_stick_x;
+        pivot = opMode.gamepad1.right_stick_x * PIVOT_SPEED;
 
         // Diagonally Alternate Motors must be the same
         /* If robot does not work properly, set the vertical values for RB and LF to positive*/
