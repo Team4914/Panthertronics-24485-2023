@@ -67,9 +67,11 @@ public class Arm {
                 opMode.telemetry.addData("Claw Left", "OPEN");
             }
         }
-        else {
+
+        if(!(opMode.gamepad1.x)) {
             leftPressed = false;
         }
+
 
         if (opMode.gamepad1.b && !rightPressed) {
             rightPressed = true;
@@ -77,17 +79,17 @@ public class Arm {
 
             if (cycleRight == 0) {
                 clawRight.setPosition(CLAW_CLOSED);
-                opMode.telemetry.addData("Claw Right", "Closed");
+                opMode.telemetry.addData("Claw Right", "CLOSED");
             }
             else {
                 clawRight.setPosition(CLAW_OPEN);
                 opMode.telemetry.addData("Claw Right", "OPEN");
             }
         }
-        else {
+
+        if(!(opMode.gamepad1.b)) {
             rightPressed = false;
         }
-
 
         opMode.telemetry.addData("CycleLeft", cycleLeft);
         opMode.telemetry.addData("CycleRight", cycleRight);
