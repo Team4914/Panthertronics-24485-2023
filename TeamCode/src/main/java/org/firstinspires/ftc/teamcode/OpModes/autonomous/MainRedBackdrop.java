@@ -26,7 +26,7 @@ public class MainRedBackdrop extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialization
-        ObjectDetector objD = new ObjectDetector(this);
+        //ObjectDetector objD = new ObjectDetector(this);
         Arm2 arm = new Arm2(this);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
