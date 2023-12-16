@@ -24,6 +24,6 @@ public class ResetArm extends OpMode {
 
     @Override
     public void loop() {
-
+        telemetry.addData("Arm Position", arm.elbowMotorLeft.getCurrentPosition());
     }
 }

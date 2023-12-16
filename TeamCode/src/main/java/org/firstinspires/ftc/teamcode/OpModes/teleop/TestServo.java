@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class TestServo extends OpMode {
     Servo servo;
-    double WRIST_SPEED = 0.01;
-    double FINE_TUNE_SPEED = WRIST_SPEED /5;
+    double WRIST_SPEED = 0.001;
+    double FINE_TUNE_SPEED = WRIST_SPEED / 5;
     double wristPos = 0;
 
 
@@ -26,6 +26,9 @@ public class TestServo extends OpMode {
 
         wristPos += (gamepad1.left_bumper ? -1 : 0) * FINE_TUNE_SPEED;
         wristPos += (gamepad1.right_bumper ? 1 : 0) * FINE_TUNE_SPEED;
+
+        wristPos = Math.min(wristPos, 1);
+        wristPos = Math.max(wristPos, 0);
 
         servo.setPosition(wristPos);
         telemetry.addData("WRIST POSITION:", wristPos);

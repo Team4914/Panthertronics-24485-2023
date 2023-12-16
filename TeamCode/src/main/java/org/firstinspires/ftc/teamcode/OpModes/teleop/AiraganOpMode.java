@@ -34,6 +34,11 @@ public class AiraganOpMode extends OpMode {
     }
 
     @Override
+    public void start() {
+        arm.setState(Arm2.BOARD_STATE);
+    }
+
+    @Override
     public void loop() {
         mecanumDrive.update();
         hanger.update();

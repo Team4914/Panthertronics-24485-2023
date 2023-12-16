@@ -11,22 +11,21 @@ public class Arm2 {
     final static double CLAW_CLOSED = 1;
 
     OpMode opMode;
-    private DcMotor elbowMotorLeft, elbowMotorRight;
+    public DcMotor elbowMotorLeft, elbowMotorRight;
     private Servo clawLeft, clawRight, wrist;
 
     private int cycleLeft = -1, cycleRight = -1;
     private boolean leftPressed = false, rightPressed = false;
 
     // Elbow Positions
-    public static int ELBOW_GROUND = -200;
-    public static int ELBOW_BOARD = -100;
+    public static int ELBOW_GROUND = -1550;
+    public static int ELBOW_BOARD = ELBOW_GROUND + 350;
     public static int ELBOW_STORAGE = 0;
 
     // Wrist Positions
-    public static double WRIST_GROUND = 0.5;
-    public static double WRIST_BOARD = 0.4;
-    public static double WRIST_STORAGE = 0.8;
-
+    public static double WRIST_GROUND = 0.64;
+    public static double WRIST_BOARD = 0.75;
+    public static double WRIST_STORAGE = 0.03;
     // States
     public static int STORAGE_STATE = 0;
     public static int BOARD_STATE = 1;
@@ -36,6 +35,9 @@ public class Arm2 {
     static double[] WRIST_STATE_POS = { WRIST_STORAGE, WRIST_BOARD, WRIST_GROUND };
 
     int lastElbowTargetPos = 0;
+    int curPos = 0;
+    int curMove = 0;
+    int move = 0;
 
     public Arm2(OpMode opMode) {
         this.opMode = opMode;
@@ -72,6 +74,9 @@ public class Arm2 {
         else if (opMode.gamepad1.right_trigger > 0) {
             setState(Arm2.BOARD_STATE);
         }
+
+        opMode.telemetry.addData("Moving Elbow From: ", curPos);
+        opMode.telemetry.addData("Moving Elbow To: ", curPos + move);
 
         // Claw
         if (opMode.gamepad1.x && !leftPressed) {
@@ -122,6 +127,7 @@ public class Arm2 {
         elbowMotorLeft.setTargetPosition(dist);
         elbowMotorRight.setTargetPosition(dist);
         opMode.telemetry.addData("Moving Elbow By: ", dist);
+        elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotorLeft.setPower(0.5);
         elbowMotorRight.setPower(0.5);
@@ -133,12 +139,10 @@ public class Arm2 {
     }
 
     public void setElbowTargetPos(int pos) {
-        int curMove = elbowMotorLeft.getCurrentPosition();
-        int curPos = lastElbowTargetPos + curMove;
+        curMove = elbowMotorLeft.getCurrentPosition();
+        curPos = lastElbowTargetPos + curMove;
 
-        int move = pos - curPos;
-        opMode.telemetry.addData("Moving Elbow From: ", curPos);
-        opMode.telemetry.addData("Moving Elbow To: ", pos);
+        move = pos - curPos;
         moveElbow(move);
     }
 
@@ -147,6 +151,8 @@ public class Arm2 {
 //    }
 
     public void setState(int state) {
+        if (state == STORAGE_STATE) closeClawRight();
+
         setElbowTargetPos(ELBOW_STATE_POS[state]);
         wrist.setPosition(WRIST_STATE_POS[state]);
     }
