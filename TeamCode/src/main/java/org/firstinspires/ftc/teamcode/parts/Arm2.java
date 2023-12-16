@@ -119,37 +119,46 @@ public class Arm2 {
     }
 
     public void reset() {
-        moveElbow(-ELBOW_GROUND); // Hardcoded value to be called in seperate opmode
+        setElbowTargetPos(-ELBOW_GROUND);
+        //moveElbow(-ELBOW_GROUND); // Hardcoded value to be called in seperate opmode
         wrist.setPosition(WRIST_STORAGE);
     }
 
-    public void moveElbow(int dist) {
-        elbowMotorLeft.setTargetPosition(dist);
-        elbowMotorRight.setTargetPosition(dist);
-        opMode.telemetry.addData("Moving Elbow By: ", dist);
+    public void setElbowTargetPos(int pos) {
+        elbowMotorLeft.setTargetPosition(pos);
+        elbowMotorRight.setTargetPosition(pos);
         elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotorLeft.setPower(0.5);
         elbowMotorRight.setPower(0.5);
-
-        if (!elbowMotorLeft.isBusy()) {
-            elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
     }
-
-    public void setElbowTargetPos(int pos) {
-        curMove = elbowMotorLeft.getCurrentPosition();
-        curPos = lastElbowTargetPos + curMove;
-
-        move = pos - curPos;
-        moveElbow(move);
-    }
-
-//    public void setWristPosition(double pos) {
-//        wrist.setPosition(pos);
+//    public void moveElbow(int dist) {
+//        elbowMotorLeft.setTargetPosition(dist);
+//        elbowMotorRight.setTargetPosition(dist);
+//        opMode.telemetry.addData("Moving Elbow By: ", dist);
+//        elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        elbowMotorLeft.setPower(0.5);
+//        elbowMotorRight.setPower(0.5);
+//
+//        if (!elbowMotorLeft.isBusy()) {
+//            elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        }
 //    }
 
+//    public void setElbowTargetPos(int pos) {
+//        curMove = elbowMotorLeft.getCurrentPosition();
+//        curPos = lastElbowTargetPos + curMove;
+//
+//        move = pos - curPos;
+//        moveElbow(move);
+//    }
+//
+////    public void setWristPosition(double pos) {
+////        wrist.setPosition(pos);
+////    }
+//
     public void setState(int state) {
         if (state == STORAGE_STATE) closeClawRight();
 
