@@ -58,7 +58,7 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
     private TfodProcessor tfod;
-    private static final String TFOD_MODEL_ASSET = "newmodel.tflite";
+    private static final String TFOD_MODEL_ASSET = "newModel.tflite";
 
     /**
      * The variable to store our instance of the vision portal.

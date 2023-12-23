@@ -14,11 +14,12 @@ public class Arm2 {
     public DcMotor elbowMotorLeft, elbowMotorRight;
     private Servo clawLeft, clawRight, wrist;
 
+    double wristPos = 0.5;
     private int cycleLeft = -1, cycleRight = -1;
     private boolean leftPressed = false, rightPressed = false;
 
     // Elbow Positions
-    public static int ELBOW_GROUND = -1550;
+    public static int ELBOW_GROUND = -1530;
     public static int ELBOW_BOARD = ELBOW_GROUND + 350;
     public static int ELBOW_STORAGE = 0;
 
@@ -75,6 +76,11 @@ public class Arm2 {
         else if (opMode.gamepad1.right_trigger > 0) {
             setState(Arm2.BOARD_STATE);
         }
+
+//        wristPos += (opMode.gamepad1.left_bumper? -1 : 0) * WRIST_SPEED;
+//        wristPos += (opMode.gamepad1.right_bumper? 1 : 0) * WRIST_SPEED;
+//
+//        wrist.setPosition(wristPos);
 
         opMode.telemetry.addData("Moving Elbow From: ", curPos);
         opMode.telemetry.addData("Moving Elbow To: ", curPos + move);
