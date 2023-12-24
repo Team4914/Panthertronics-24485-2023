@@ -132,6 +132,9 @@ public class Arm2 {
 
         opMode.telemetry.addData("CycleLeft", cycleLeft);
         opMode.telemetry.addData("CycleRight", cycleRight);
+        opMode.telemetry.addData("ELBOW_GROUND", ELBOW_GROUND);
+        opMode.telemetry.addData("ELBOW_STORAGE", ELBOW_GROUND);
+        opMode.telemetry.addData("ELBOW_", ELBOW_GROUND);
     }
 
     public void reset() {
@@ -146,6 +149,22 @@ public class Arm2 {
         if (state != ELBOW_GROUND) return;
         if (!opMode.gamepad1.left_bumper && !opMode.gamepad1.right_bumper) return;
 
+        ELBOW_SHIFT += (opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED;
+        ELBOW_SHIFT += (opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED;
+
+        ELBOW_GROUND += ELBOW_SHIFT;
+        ELBOW_BOARD += ELBOW_SHIFT;
+        ELBOW_STORAGE += ELBOW_SHIFT;
+
+        setState(GROUND_STATE);
+    }
+    /*
+    public void adjust() {
+        final double ADJUST_SPEED = 0.05;
+
+        if (state != ELBOW_GROUND) return;
+        if (!opMode.gamepad1.left_bumper && !opMode.gamepad1.right_bumper) return;
+
         elbowMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         elbowMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -154,9 +173,16 @@ public class Arm2 {
         elbowMotorRight.setPower((opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED);
         elbowMotorRight.setPower((opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED);
 
-        elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ELBOW_SHIFT = elbowMotorLeft.getCurrentPosition() - ELBOW_GROUND;
+        ELBOW_GROUND += ELBOW_SHIFT;
+        ELBOW_BOARD += ELBOW_SHIFT;
+        ELBOW_STORAGE += ELBOW_SHIFT;
+
+        elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+     */
 
     public void setElbowTargetPos(int pos) {
         elbowMotorLeft.setTargetPosition(pos);
