@@ -10,6 +10,9 @@ public class Arm2 {
     final static double CLAW_OPEN = 0.67;
     final static double CLAW_CLOSED = 0.45;
 
+    final static double CLAW_OPEN_RIGHT = 0.1828; // Temp fixes
+    final static double CLAW_CLOSED_RIGHT = 0;
+
     OpMode opMode;
     public DcMotor elbowMotorLeft, elbowMotorRight;
     private Servo clawLeft, clawRight, wrist;
@@ -22,10 +25,12 @@ public class Arm2 {
     public static int ELBOW_GROUND = -1530;
     public static int ELBOW_BOARD = ELBOW_GROUND + 350;
     public static int ELBOW_STORAGE = 0;
+    public static int ELBOW_SHIFT = 0;
+    
 
     // Wrist Positions
     public static double WRIST_GROUND = 0.64;
-    public static double WRIST_BOARD = 0.75;
+    public static double WRIST_BOARD = 0.645;
     public static double WRIST_STORAGE = 0.03;
     // States
     public static int STORAGE_STATE = 0;
@@ -35,10 +40,10 @@ public class Arm2 {
     static int[] ELBOW_STATE_POS = { ELBOW_STORAGE, ELBOW_BOARD, ELBOW_GROUND };
     static double[] WRIST_STATE_POS = { WRIST_STORAGE, WRIST_BOARD, WRIST_GROUND };
 
-    int lastElbowTargetPos = 0;
-    int curPos = 0;
-    int curMove = 0;
-    int move = 0;
+    //int lastElbowTargetPos = 0;
+    //int curPos = 0;
+    //int curMove = 0;
+    //int move = 0;
 
     public Arm2(OpMode opMode) {
         this.opMode = opMode;
@@ -77,13 +82,13 @@ public class Arm2 {
             setState(Arm2.BOARD_STATE);
         }
 
-//        wristPos += (opMode.gamepad1.left_bumper? -1 : 0) * WRIST_SPEED;
-//        wristPos += (opMode.gamepad1.right_bumper? 1 : 0) * WRIST_SPEED;
-//
-//        wrist.setPosition(wristPos);
+        // wristPos += (opMode.gamepad1.left_bumper? -1 : 0) * WRIST_SPEED;
+        // wristPos += (opMode.gamepad1.right_bumper? 1 : 0) * WRIST_SPEED;
+        //
+        // wrist.setPosition(wristPos);
 
-        opMode.telemetry.addData("Moving Elbow From: ", curPos);
-        opMode.telemetry.addData("Moving Elbow To: ", curPos + move);
+        //opMode.telemetry.addData("Moving Elbow From: ", curPos);
+        //opMode.telemetry.addData("Moving Elbow To: ", curPos + move);
 
         // Claw
         if (opMode.gamepad1.x && !leftPressed) {
@@ -130,6 +135,10 @@ public class Arm2 {
         setElbowTargetPos(-ELBOW_GROUND);
         //moveElbow(-ELBOW_GROUND); // Hardcoded value to be called in seperate opmode
         wrist.setPosition(WRIST_STORAGE);
+    }
+
+    public void adjust() {
+
     }
 
     public void setElbowTargetPos(int pos) {
@@ -181,9 +190,9 @@ public class Arm2 {
         clawLeft.setPosition(CLAW_CLOSED);
     }
     public void openClawRight() {
-        clawRight.setPosition(CLAW_OPEN);
+        clawRight.setPosition(CLAW_OPEN_RIGHT);
     }
     public void closeClawRight () {
-        clawRight.setPosition(CLAW_CLOSED);
+        clawRight.setPosition(CLAW_CLOSED_RIGHT);
     }
 }

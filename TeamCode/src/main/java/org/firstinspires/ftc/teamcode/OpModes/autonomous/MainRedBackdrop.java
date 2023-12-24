@@ -41,7 +41,7 @@ public class MainRedBackdrop extends LinearOpMode {
         Trajectory path2 = drive.trajectoryBuilder(path1.end())
                 .back(6)
                 .splineTo(new Vector2d(60, -60), 0)
-                        .build();
+                .build();
 
         waitForStart();
         if(isStopRequested()) return;

@@ -21,7 +21,8 @@ public class MecanumDrive {
         LBMotor = opMode.hardwareMap.get(DcMotor.class, "left_back_drive");
 
 
-        RFMotor.setDirection(DcMotorSimple.Direction.REVERSE); // actually right front (good)
+        //
+        // RFMotor.setDirection(DcMotorSimple.Direction.REVERSE); // actually right front (good)
         RBMotor.setDirection(DcMotorSimple.Direction.REVERSE); // actually left back (good)
         LFMotor.setDirection(DcMotorSimple.Direction.FORWARD); // actually right back (good)
         LBMotor.setDirection(DcMotorSimple.Direction.FORWARD); // actually left front

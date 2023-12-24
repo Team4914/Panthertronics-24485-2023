@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.parts.*;
 @TeleOp
 public class AiraganOpMode extends OpMode {
     MecanumDrive mecanumDrive;
-    Arm arm;
+    Arm2 arm;
     DcMotor motor;
     Hanger hanger;
     //Roller roller;
@@ -19,14 +19,14 @@ public class AiraganOpMode extends OpMode {
     @Override
     public void init() {
         mecanumDrive = new MecanumDrive(this);
-        arm = new Arm(this);
+        arm = new Arm2(this);
         //roller = new Roller(this);
         hanger = new Hanger(this);
 
 
 
 
-        launcher = new Launcher(this);
+        //launcher = new Launcher(this);
 
         //motor = hardwareMap.get(DcMotor.class, "hangMotor");
 
@@ -35,14 +35,14 @@ public class AiraganOpMode extends OpMode {
 
     @Override
     public void start() {
-        //arm.setState(Arm2.BOARD_STATE);
+        arm.setState(Arm2.BOARD_STATE);
     }
 
     @Override
     public void loop() {
         mecanumDrive.update();
         hanger.update();
-        launcher.update();
+        //launcher.update();
         arm.update();
     }
 }
