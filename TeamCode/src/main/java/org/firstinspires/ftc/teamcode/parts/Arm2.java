@@ -17,7 +17,10 @@ public class Arm2 {
     public DcMotor elbowMotorLeft, elbowMotorRight;
     private Servo clawLeft, clawRight, wrist;
 
-    double wristPos = 0.5;
+    // State
+    public static int state = 0;
+
+    //double wristPos = 0.5;
     private int cycleLeft = -1, cycleRight = -1;
     private boolean leftPressed = false, rightPressed = false;
 
@@ -138,7 +141,21 @@ public class Arm2 {
     }
 
     public void adjust() {
+        final double ADJUST_SPEED = 0.05;
 
+        if (state != ELBOW_GROUND) return;
+        if (!opMode.gamepad1.left_bumper && !opMode.gamepad1.right_bumper) return;
+
+        elbowMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elbowMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        elbowMotorLeft.setPower((opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED);
+        elbowMotorLeft.setPower((opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED);
+        elbowMotorRight.setPower((opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED);
+        elbowMotorRight.setPower((opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED);
+
+        elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void setElbowTargetPos(int pos) {
@@ -176,7 +193,8 @@ public class Arm2 {
 ////        wrist.setPosition(pos);
 ////    }
 //
-    public void setState(int state) {
+    public void setState(int newState) {
+        state = newState;
         if (state == STORAGE_STATE) closeClawRight();
 
         setElbowTargetPos(ELBOW_STATE_POS[state]);

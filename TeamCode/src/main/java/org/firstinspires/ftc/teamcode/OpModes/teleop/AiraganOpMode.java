@@ -44,5 +44,6 @@ public class AiraganOpMode extends OpMode {
         hanger.update();
         //launcher.update();
         arm.update();
+        arm.adjust();
     }
 }
