@@ -25,10 +25,10 @@ public class Arm2 {
     private boolean leftPressed = false, rightPressed = false;
 
     // Elbow Positions
-    public static int ELBOW_GROUND = -1530;
-    public static int ELBOW_BOARD = ELBOW_GROUND + 350;
-    public static int ELBOW_STORAGE = 0;
-    public static int ELBOW_SHIFT = 0;
+    public final static int ELBOW_GROUND = -1530;
+    public final static int ELBOW_BOARD = ELBOW_GROUND + 350;
+    public final static int ELBOW_STORAGE = 0;
+    double elbowShift = 0;
     
 
     // Wrist Positions
@@ -133,8 +133,8 @@ public class Arm2 {
         opMode.telemetry.addData("CycleLeft", cycleLeft);
         opMode.telemetry.addData("CycleRight", cycleRight);
         opMode.telemetry.addData("ELBOW_GROUND", ELBOW_GROUND);
-        opMode.telemetry.addData("ELBOW_STORAGE", ELBOW_GROUND);
-        opMode.telemetry.addData("ELBOW_", ELBOW_GROUND);
+        opMode.telemetry.addData("ELBOW_BOARD", ELBOW_BOARD);
+        opMode.telemetry.addData("ELBOW_SHIFT", elbowShift);
     }
 
     public void reset() {
@@ -144,17 +144,13 @@ public class Arm2 {
     }
 
     public void adjust() {
-        final double ADJUST_SPEED = 0.05;
+        final double ADJUST_SPEED = 0.25;
 
-        if (state != ELBOW_GROUND) return;
+        if (state != GROUND_STATE) return;
         if (!opMode.gamepad1.left_bumper && !opMode.gamepad1.right_bumper) return;
 
-        ELBOW_SHIFT += (opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED;
-        ELBOW_SHIFT += (opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED;
-
-        ELBOW_GROUND += ELBOW_SHIFT;
-        ELBOW_BOARD += ELBOW_SHIFT;
-        ELBOW_STORAGE += ELBOW_SHIFT;
+        elbowShift += (opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED;
+        elbowShift += (opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED;
 
         setState(GROUND_STATE);
     }
@@ -223,7 +219,7 @@ public class Arm2 {
         state = newState;
         if (state == STORAGE_STATE) closeClawRight();
 
-        setElbowTargetPos(ELBOW_STATE_POS[state]);
+        setElbowTargetPos(ELBOW_STATE_POS[state] + (int) elbowShift);
         wrist.setPosition(WRIST_STATE_POS[state]);
     }
 
