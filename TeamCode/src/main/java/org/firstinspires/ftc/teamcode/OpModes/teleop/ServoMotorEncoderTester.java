@@ -33,11 +33,11 @@ public class ServoMotorEncoderTester extends OpMode {
         telemetry.addData("Controls: ", "X to switch modes; A and B to switch ports; \nTriggers to change position/power; Bumpers to fine tune;");
 
         for (int i = 0; i < servos.length; i++) {
-            servos[i] = hardwareMap.get(Servo.class, Integer.toString(i));
+            servos[i] = hardwareMap.get(Servo.class, "s" + Integer.toString(i));
         }
 
         for (int i = 0; i < motors.length; i++) {
-            motors[i] = hardwareMap.get(DcMotor.class, Integer.toString(i));
+            motors[i] = hardwareMap.get(DcMotor.class, "m" + Integer.toString(i));
             motors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motors[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -46,6 +46,7 @@ public class ServoMotorEncoderTester extends OpMode {
     }
 
     public void loop() {
+        telemetry.addData("Controls: ", "X to switch modes; A and B to switch ports; \nTriggers to change position/power; Bumpers to fine tune;");
         telemetry.addData("Mode: ", mode);
         if (mode.equals("Servo")) updateServo();
         else if (mode.equals("Motor")) updateMotor();
@@ -56,7 +57,9 @@ public class ServoMotorEncoderTester extends OpMode {
 
         if (nextPortBut.update(gamepad1.a)) servoNum++;
         if (prevPortBut.update(gamepad1.b)) servoNum--;
-        servoNum = (servoNum + 1) % (servos.length + 1) - 1;
+
+        if (servoNum > 11) servoNum -= 13;
+        if (servoNum < -1) servoNum += 13;
 
         servoPos -= gamepad1.left_trigger * SERVO_SPEED;
         servoPos += gamepad1.right_trigger * SERVO_SPEED;
@@ -67,13 +70,14 @@ public class ServoMotorEncoderTester extends OpMode {
         servoPos = Math.max(servoPos, 0);
         servoPos = Math.min(servoPos, 1);
 
-        servos[servoNum].setPosition(servoPos);
         telemetry.addData("Servo Target Position: ", servoPos);
 
         if (servoNum == -1) {
             telemetry.addData("Port: ", "None");
             return;
         }
+
+        servos[servoNum].setPosition(servoPos);
 
         int deviceNum = servoNum / 6;
         if (deviceNum == 0) telemetry.addData("Device: ", "Control Hub");
@@ -89,6 +93,9 @@ public class ServoMotorEncoderTester extends OpMode {
         if (prevPortBut.update(gamepad1.b)) motorNum--;
         motorNum = (motorNum + 1) % (motors.length + 1) - 1;
 
+        if (motorNum > 7) motorNum -= 9;
+        if (motorNum < -1) motorNum += 9;
+
         double motorMove = 0;
 
         motorMove -= gamepad1.left_trigger * MOTOR_SPEED;
@@ -100,15 +107,18 @@ public class ServoMotorEncoderTester extends OpMode {
         motorMove = Math.max(motorMove, 0);
         motorMove = Math.min(motorMove, 1);
 
-        motors[motorNum].setPower(motorMove);
         telemetry.addData("Motor Power: ", motorMove);
-
-        telemetry.addData("Motor Encoder Reading: ", motors[motorNum].getCurrentPosition());
 
         if (motorNum == -1) {
             telemetry.addData("Port: ", "None");
             return;
         }
+
+        motors[motorNum].setPower(motorMove);
+
+        telemetry.addData("Motor Encoder Reading: ", motors[motorNum].getCurrentPosition());
+
+
 
         int deviceNum = servoNum / 4;
         if (deviceNum == 0) telemetry.addData("Device: ", "Control Hub");

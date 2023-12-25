@@ -2,6 +2,7 @@ package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -14,13 +15,27 @@ public class MeepMeepTest {
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
+        /*
 
+        drive.setPoseEstimate(startPose);
+
+        Trajectory path1 = drive.trajectoryBuilder(startPose)
+                .splineTo(new Vector2d(48, -36), 0)
+                .build();
+
+        Trajectory path2 = drive.trajectoryBuilder(path1.end())
+                .back(6)
+                .splineTo(new Vector2d(60, -60), 0)
+                .build();
+        */
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2))
-                                .splineTo(new Vector2d(48, -36), 0)
+                        drive.trajectorySequenceBuilder(new Pose2d(-24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2))
+                                .forward(56)
+                                .strafeRight(24)
+                                .splineTo(new Vector2d(48, -36), Math.toRadians(-90))
                                 .addDisplacementMarker(() -> {
                                     /* Everything in the marker callback should be commented out */
                                     // Arm shenanigans

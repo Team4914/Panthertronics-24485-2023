@@ -33,7 +33,7 @@ public class Arm2 {
 
     // Wrist Positions
     public static double WRIST_GROUND = 0.64;
-    public static double WRIST_BOARD = 0.645;
+    public static double WRIST_BOARD = 0.654;
     public static double WRIST_STORAGE = 0.03;
     // States
     public static int STORAGE_STATE = 0;

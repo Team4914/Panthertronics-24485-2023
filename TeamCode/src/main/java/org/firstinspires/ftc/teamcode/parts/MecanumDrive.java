@@ -22,10 +22,10 @@ public class MecanumDrive {
 
 
         //
-        // RFMotor.setDirection(DcMotorSimple.Direction.REVERSE); // actually right front (good)
-        RBMotor.setDirection(DcMotorSimple.Direction.REVERSE); // actually left back (good)
-        LFMotor.setDirection(DcMotorSimple.Direction.FORWARD); // actually right back (good)
-        LBMotor.setDirection(DcMotorSimple.Direction.FORWARD); // actually left front
+        // RFMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        LFMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         opMode.telemetry.addData("Mecanum Drive: ", "Initialized");
     }

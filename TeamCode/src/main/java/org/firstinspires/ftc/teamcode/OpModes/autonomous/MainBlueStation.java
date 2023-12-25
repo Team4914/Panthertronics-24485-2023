@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Autonomous
-public class MainBlueBackdrop extends LinearOpMode {
+public class MainBlueStation extends LinearOpMode {
     final static double ROBOT_WIDTH = 16.75;
     final static double ROBOT_LENGTH = 17;
     final static double ROBOT_CENTER_X = ROBOT_WIDTH/2;
@@ -31,17 +31,19 @@ public class MainBlueBackdrop extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
+        Pose2d startPose = new Pose2d(-24 - ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
         drive.setPoseEstimate(startPose);
 
         Trajectory path1 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(48, 36), 0)
+                .forward(56)
+                .strafeLeft(24)
+                .splineTo(new Vector2d(48, 36), Math.toRadians(90))
                 .build();
 
         Trajectory path2 = drive.trajectoryBuilder(path1.end())
                 .back(6)
                 .splineTo(new Vector2d(60, 60), 0)
-                        .build();
+                .build();
 
         waitForStart();
         if(isStopRequested()) return;
