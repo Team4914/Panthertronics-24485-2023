@@ -66,7 +66,6 @@ public class ObjectDetectionTester extends LinearOpMode {
             
             telemetry.addData("Calculated Recognition Position", ObjectDetector.recognitionToFieldPos(
                 recognition,
-                600,
                 2.25,
                 getCameraPose(startPose)
             ));

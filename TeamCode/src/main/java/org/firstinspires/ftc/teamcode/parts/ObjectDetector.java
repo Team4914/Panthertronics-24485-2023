@@ -28,8 +28,10 @@ public class ObjectDetector {
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
-            "Cube1",
+            "Red",
     };;
+
+    public static final Size SCREEN_RESOLUTION = new Size(640, 480);
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
@@ -104,7 +106,7 @@ public class ObjectDetector {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        builder.setCameraResolution(new Size(640, 480));
+        builder.setCameraResolution(SCREEN_RESOLUTION);
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         builder.enableLiveView(true);
@@ -194,11 +196,11 @@ public class ObjectDetector {
         return cameraPose.vec().plus(offset);
     }
     
-    public static Vector2d recognitionToFieldPos(Recognition recognition, double screenWidth, double realInches, Pose2d cameraPose) {
+    public static Vector2d recognitionToFieldPos(Recognition recognition, double realInches, Pose2d cameraPose) {
         double width = recognition.getImageWidth();
         double depth = imageWidthToDepth(width, realInches);
         
-        double imgX = (recognition.getLeft() + recognition.getRight())/2 - screenWidth/2;
+        double imgX = (recognition.getLeft() + recognition.getRight())/2 - SCREEN_RESOLUTION.getWidth()/2d;
         return imageXToFieldPos(imgX, depth, cameraPose);
     }
 }

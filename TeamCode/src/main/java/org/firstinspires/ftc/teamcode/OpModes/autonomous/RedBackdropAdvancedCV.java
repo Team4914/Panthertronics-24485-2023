@@ -12,11 +12,14 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
 // shared
 import org.firstinspires.ftc.teamcode.parts.*;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Autonomous
 public class RedBackdropAdvancedCV extends OpMode {
@@ -25,7 +28,19 @@ public class RedBackdropAdvancedCV extends OpMode {
     final static double ROBOT_LENGTH = 17;
     final static double ARM_GROUND_LENGTH = 8; // placeholder value
 
-    final static double
+    final static int DETECT_INTERVAL = 20;
+
+    final static String TEAM_PROP_LABEL = "Red";
+    final static double TEAM_PROP_WIDTH = 2.8;
+    final static Pose2d CAMERA_POSE_OFFSET = new Pose2d(8, -8, 0);
+
+    final static double OUTLIER_THRESHOLD = 24;
+
+    final static Vector2d[] TAPE_POSITIONS = {
+        new Vector2d(0, -24 - 6), // index 0 = left
+        new Vector2d(12, -24), // index 1 = middle
+        new Vector2d(24, -24 - 6) // index 2 = right
+    };
 
     // Parts
     ObjectDetector objD;
@@ -34,12 +49,32 @@ public class RedBackdropAdvancedCV extends OpMode {
 
     // Trajectories
     Trajectory cvTraj;
-    Trajectory leftTapeTraj;
-    Trajectory middleTapeTraj;
-    Trajectory rightTapeTraj;
+    TrajectorySequence leftTapeTraj;
+    TrajectorySequence middleTapeTraj;
+    TrajectorySequence rightTapeTraj;
 
     // status attributes
+    int detectClock = 0;
 
+    enum State {
+        DETECTING_TEAM_PROP,
+        PLACING_PRELOADED_PIXELS,
+        PARKING,
+        IDLING
+    }
+
+    State state = State.DETECTING_TEAM_PROP;
+
+    List<Double> recognitionXs = new ArrayList<>();
+    List<Double> recognitionYs = new ArrayList<>();
+    List<Double> recognitionConfidences = new ArrayList<>();
+
+    public static double confidenceToWeight(double confidence) {
+        double b = 2;
+        double x = confidence;
+
+        return Math.pow(x,b) / (Math.pow(x,b) + Math.pow(1-x, b));
+    }
 
     @Override
     public void init() {
@@ -64,26 +99,47 @@ public class RedBackdropAdvancedCV extends OpMode {
 
         Pose2d parkPose = new Pose2d(60, -60, Math.PI);
 
-        leftTapeTraj = drive.trajectoryBuilder(cvTraj.end())
+        leftTapeTraj = drive.trajectorySequenceBuilder(cvTraj.end())
                 .splineTo(new Vector2d(ARM_GROUND_LENGTH + ROBOT_LENGTH/2, -24), Math.PI)
-                .back(12)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.GROUND))
+                .waitSeconds(3)
+                .addTemporalMarker(() -> arm.openClawLeft())
+                .waitSeconds(1)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
+                .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(48, -36 + 6, 0), 0)
+                .addTemporalMarker(() -> arm.openClawRight())
+                .waitSeconds(1)
                 .back(12)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
-        middleTapeTraj = drive.trajectoryBuilder(cvTraj.end())
+        middleTapeTraj = drive.trajectorySequenceBuilder(cvTraj.end())
                 .splineTo(new Vector2d(24 + ARM_GROUND_LENGTH + ROBOT_LENGTH/2 - 6, -24), Math.PI)
-                .back(12)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.GROUND))
+                .waitSeconds(3)
+                .addTemporalMarker(() -> arm.openClawLeft())
+                .waitSeconds(1)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
+                .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(48, -36 + 0, 0), 0)
+                .addTemporalMarker(() -> arm.openClawRight())
+                .waitSeconds(1)
                 .back(12)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
-        leftTapeTraj = drive.trajectoryBuilder(cvTraj.end())
+        leftTapeTraj = drive.trajectorySequenceBuilder(cvTraj.end())
                 .splineTo(new Vector2d(24 + ARM_GROUND_LENGTH + ROBOT_LENGTH/2, -24), Math.PI)
-                .back(12)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.GROUND))
+                .waitSeconds(3)
+                .addTemporalMarker(() -> arm.openClawLeft())
+                .waitSeconds(1)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
+                .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(48, -36 - 6, 0), 0)
+                .addTemporalMarker(() -> arm.openClawRight())
+                .waitSeconds(1)
                 .back(12)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
@@ -93,56 +149,118 @@ public class RedBackdropAdvancedCV extends OpMode {
     public void start() {
         arm.closeClawLeft();
         arm.closeClawRight();
+
+        state = State.DETECTING_TEAM_PROP;
+        drive.followTrajectoryAsync(cvTraj);
     }
 
     @Override
     public void loop() {
-        drive.update();
 
-        Pose2d curPos = drive.getPoseEstimate();
+        switch (state) {
+            case DETECTING_TEAM_PROP:
+                if (drive.isBusy()) { // still moving to position and taking pictures
+                    detectClock--;
 
-        /*
-        List<Recognition> currentRecognitions = objD.getRecognitions();
-        addTelemetry("# Objects Detected", currentRecognitions.size());
+                    if (detectClock < 0) { // try to detect
+                        detectClock = DETECT_INTERVAL;
 
-        Collections.sort(currentRecognitions, Comparator.comparingDouble(Recognition::getConfidence));
+                        Pose2d curPose = drive.getPoseEstimate();
+                        Pose2d cameraPose = new Pose2d(
+                                curPose.vec().plus(CAMERA_POSE_OFFSET.vec().rotated(curPose.getHeading())),
+                                curPose.getHeading() + CAMERA_POSE_OFFSET.getHeading()
+                        );
 
-        // if (recognition.getLabel() == team prop) TODO: check if right type
+                        List<Recognition> currentRecognitions = objD.getRecognitions();
+                        telemetry.addData("# Objects Detected", currentRecognitions.size());
 
-        int pos = 0; // default; undetected=left
+                        for (Recognition recognition : currentRecognitions) {
+                            //if (!recognition.getLabel().equals(TEAM_PROP_LABEL)) continue;
 
-        if (currentRecognitions.size() != 0) {
-            Recognition recognition = currentRecognitions.get(currentRecognitions.size() - 1);
+                            Vector2d propPos = ObjectDetector.recognitionToFieldPos(recognition, TEAM_PROP_WIDTH, cameraPose);
 
-            double x = (recognition.getLeft() + recognition.getRight()) / 2;
-            double y = (recognition.getTop() + recognition.getBottom()) / 2;
+                            recognitionXs.add(propPos.getX());
+                            recognitionYs.add(propPos.getY());
+                            recognitionConfidences.add((double) recognition.getConfidence());
+                        }
+                    }
+                } else { // arrived at position; calculate team prop pos and switch state
+                    // remove outliers
+                    List<Double> sortedXs = recognitionXs.stream().sorted().collect(Collectors.toList());
+                    List<Double> sortedYs = recognitionYs.stream().sorted().collect(Collectors.toList());
 
-            pos = ObjectDetector.decidePosition(x, y, recognition.getConfidence());
+                    double medianX, medianY;
+
+                    if (sortedXs.size() % 2 == 0)
+                        medianX = sortedXs.get(sortedXs.size() / 2 - 1) + sortedXs.get(sortedXs.size() / 2);
+                    else medianX = sortedXs.get(sortedXs.size() / 2);
+
+                    if (sortedYs.size() % 2 == 0)
+                        medianY = sortedYs.get(sortedYs.size() / 2 - 1) + sortedYs.get(sortedYs.size() / 2);
+                    else medianY = sortedYs.get(sortedYs.size() / 2);
+
+                    for (int i = 0; i < recognitionXs.size(); i++) {
+                        if (Math.abs(recognitionXs.get(i) - medianX) > OUTLIER_THRESHOLD
+                                || Math.abs(recognitionYs.get(i) - medianY) > OUTLIER_THRESHOLD)
+                            recognitionConfidences.set(i, 0d);
+                    }
+
+                    // calculate position by weighted average
+                    double xSum = 0, ySum = 0, weightsSum = 0;
+
+                    for (int i = 0; i < recognitionXs.size(); i++) {
+                        double weight = confidenceToWeight(recognitionConfidences.get(i));
+
+                        weightsSum += weight;
+                        xSum += weight * recognitionXs.get(i);
+                        ySum += weight * recognitionYs.get(i);
+                    }
+
+                    int closestTape = 0;
+
+                    if (weightsSum != 0) {
+                        Vector2d avgPos = new Vector2d(xSum / weightsSum, ySum / weightsSum);
+
+                        // find closest tape pos (team props are placed at the midpoint of the tape)
+                        double closestDist = Double.MAX_VALUE;
+
+                        for (int i = 0; i < TAPE_POSITIONS.length; i++) {
+                            if (avgPos.distTo(TAPE_POSITIONS[i]) < closestDist)
+                                closestTape = i;
+                        }
+                    }
+
+                    // follow corresponding trajectory
+
+                    switch (closestTape) {
+                        case 0: // left tape
+                            drive.followTrajectorySequenceAsync(leftTapeTraj);
+                            break;
+                        case 1: // left tape
+                            drive.followTrajectorySequenceAsync(middleTapeTraj);
+                            break;
+                        case 2: // left tape
+                            drive.followTrajectorySequenceAsync(rightTapeTraj);
+                            break;
+                    }
+
+                    state = State.PLACING_PRELOADED_PIXELS;
+                }
+
+                break;
+
+            case PLACING_PRELOADED_PIXELS:
+                if (!drive.isBusy()) {
+                    state = State.IDLING;
+                    arm.setState(Arm2.State.STORAGE);
+                }
+
+                break;
+
+            case IDLING: break;
         }
-        addTelemetry("Detected Team Prop Position: ", pos);
 
-        objD.close();
-        */
-
-
-
-//        drive.followTrajectory(path1);
-//
-//        // drop off pixel
-//        arm.setState(Arm2.State.BOARD);
-//
-//        while (arm.elbowMotorLeft.isBusy() && opModeIsActive())
-//            sleep(10);
-//
-//        arm.openClawLeft();
-//        arm.openClawRight();
-//
-//        sleep(1000);
-//
-//        drive.followTrajectory(path2);
-//
-//        // reset arm
-//        arm.setState(Arm2.State.STORAGE);
+        drive.update();
     }
 }
 

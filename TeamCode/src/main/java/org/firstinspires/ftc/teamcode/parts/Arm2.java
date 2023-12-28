@@ -31,7 +31,7 @@ public class Arm2 {
             this.WRIST_POS = wristPos;
         }
     }
-    public static State state = State.STORAGE;
+    State state = State.STORAGE;
 
     //double wristPos = 0.5;
     private int cycleLeft = -1, cycleRight = -1;
