@@ -39,13 +39,17 @@ public class MeepMeepTest {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
                                 .splineToLinearHeading(new Pose2d(48, -24, Math.PI), Math.PI/2)
-                                .addDisplacementMarker(() -> {
-                                    /* Everything in the marker callback should be commented out */
-                                    // Arm shenanigans
-                                })
-                                .splineTo(new Vector2d(24 + ARM_GROUND_LENGTH + ROBOT_LENGTH/2, -24), Math.PI)
-                                .back(12)
-                                .splineToLinearHeading(new Pose2d(48, -36, 0), 0)
+
+                                .splineTo(new Vector2d(ARM_GROUND_LENGTH + ROBOT_LENGTH/2, -24), Math.PI)
+                                .addTemporalMarker(() -> {/*arm.setState(Arm2.State.GROUND)*/})
+                                .waitSeconds(3)
+                                .addTemporalMarker(() -> {/*arm.openClawLeft()*/})
+                                .waitSeconds(1)
+                                .addTemporalMarker(() -> {/*arm.setState(Arm2.State.BOARD)*/})
+                                .waitSeconds(1)
+                                .splineToLinearHeading(new Pose2d(48, -36 + 6, 0), 0)
+                                .addTemporalMarker(() -> {/*arm.openClawRight()*/})
+                                .waitSeconds(1)
                                 .back(12)
                                 .splineToLinearHeading(parkPose, 0)
                                 .build()
