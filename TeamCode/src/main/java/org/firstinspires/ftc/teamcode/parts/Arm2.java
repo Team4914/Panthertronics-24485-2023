@@ -35,7 +35,7 @@ public class Arm2 {
 
     //double wristPos = 0.5;
     private int cycleLeft = -1, cycleRight = -1;
-    private boolean leftPressed = false, rightPressed = false;
+    private TappedButton leftClawBut, rightClawBut;
 
     double elbowShift = 0;
 
@@ -85,8 +85,7 @@ public class Arm2 {
         //opMode.telemetry.addData("Moving Elbow To: ", curPos + move);
 
         // Claw
-        if (opMode.gamepad1.x && !leftPressed) {
-            leftPressed = true;
+        if (leftClawBut.update(opMode.gamepad1.x)) {
             cycleLeft = (cycleLeft + 1) % 2;
 
             if (cycleLeft == 0) {
@@ -98,12 +97,8 @@ public class Arm2 {
                 opMode.telemetry.addData("Claw Left", "OPEN");
             }
         }
-        if (!opMode.gamepad1.x) {
-            leftPressed = false;
-        }
 
-        if (opMode.gamepad1.b && !rightPressed) {
-            rightPressed = true;
+        if (rightClawBut.update(opMode.gamepad1.b)) {
             cycleRight = (cycleRight + 1) % 2;
 
             if (cycleRight == 0) {
@@ -115,11 +110,6 @@ public class Arm2 {
                 opMode.telemetry.addData("Claw Right", "OPEN");
             }
         }
-
-        if (!opMode.gamepad1.b) {
-            rightPressed = false;
-        }
-
 
         opMode.telemetry.addData("cycleLeft", cycleLeft);
         opMode.telemetry.addData("cycleRight", cycleRight);
