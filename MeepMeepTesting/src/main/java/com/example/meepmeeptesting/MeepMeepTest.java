@@ -12,6 +12,7 @@ public class MeepMeepTest {
     final static double ROBOT_LENGTH = 17;
     final static double ROBOT_CENTER_X = ROBOT_WIDTH/2;
     final static double ROBOT_CENTER_Y = ROBOT_LENGTH/2;
+    final static double ARM_GROUND_LENGTH = 8; // placeholder value
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
@@ -28,20 +29,25 @@ public class MeepMeepTest {
                 .splineTo(new Vector2d(60, -60), 0)
                 .build();
         */
+
+        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH / 2, -72 + ROBOT_LENGTH / 2, Math.PI / 2);
+        Pose2d parkPose = new Pose2d(60, -60, Math.PI);
+
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2))
-                                .forward(56)
-                                .strafeRight(24)
-                                .splineTo(new Vector2d(48, -36), Math.toRadians(-90))
+                        drive.trajectorySequenceBuilder(startPose)
+                                .splineToLinearHeading(new Pose2d(48, -24, Math.PI), Math.PI/2)
                                 .addDisplacementMarker(() -> {
                                     /* Everything in the marker callback should be commented out */
                                     // Arm shenanigans
                                 })
-                                .back(6)
-                                .splineTo(new Vector2d(60, -60), 0)
+                                .splineTo(new Vector2d(24 + ARM_GROUND_LENGTH + ROBOT_LENGTH/2, -24), Math.PI)
+                                .back(12)
+                                .splineToLinearHeading(new Pose2d(48, -36, 0), 0)
+                                .back(12)
+                                .splineToLinearHeading(parkPose, 0)
                                 .build()
                 );
 

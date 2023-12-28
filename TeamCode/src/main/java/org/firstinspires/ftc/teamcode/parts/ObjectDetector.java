@@ -174,7 +174,9 @@ public class ObjectDetector {
         visionPortal.close();
     }
 
-    static final double SCREEN_DEPTH = 10; 
+    // https://support.logi.com/hc/en-ca/articles/360023462093-Logitech-HD-Webcam-C270-Technical-Specifications
+    // 4.5 inches in real life at depth 4.5 inches = 1280 px
+    static final double SCREEN_DEPTH = 1280; // "focal length" but in px
     
     /*
         All of these methods assume camera is parallel to the ground, camera height is close to that of the object, and the object is not rotated

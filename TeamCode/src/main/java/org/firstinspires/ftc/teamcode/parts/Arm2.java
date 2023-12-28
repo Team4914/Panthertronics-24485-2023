@@ -18,35 +18,26 @@ public class Arm2 {
     private Servo clawLeft, clawRight, wrist;
 
     // State
-    public static int state = 0;
+    public enum State {
+        GROUND(-1530, 0.64),
+        BOARD(GROUND.ELBOW_POS + 350, 0.654),
+        STORAGE(0, 0.03);
+
+        public final int ELBOW_POS;
+        public final double WRIST_POS;
+
+        private State(int elbowPos, double wristPos) {
+            this.ELBOW_POS = elbowPos;
+            this.WRIST_POS = wristPos;
+        }
+    }
+    public static State state = State.STORAGE;
 
     //double wristPos = 0.5;
     private int cycleLeft = -1, cycleRight = -1;
     private boolean leftPressed = false, rightPressed = false;
 
-    // Elbow Positions
-    public final static int ELBOW_GROUND = -1530;
-    public final static int ELBOW_BOARD = ELBOW_GROUND + 350;
-    public final static int ELBOW_STORAGE = 0;
     double elbowShift = 0;
-    
-
-    // Wrist Positions
-    public static double WRIST_GROUND = 0.64;
-    public static double WRIST_BOARD = 0.654;
-    public static double WRIST_STORAGE = 0.03;
-    // States
-    public static int STORAGE_STATE = 0;
-    public static int BOARD_STATE = 1;
-    public static int GROUND_STATE = 2;
-
-    static int[] ELBOW_STATE_POS = { ELBOW_STORAGE, ELBOW_BOARD, ELBOW_GROUND };
-    static double[] WRIST_STATE_POS = { WRIST_STORAGE, WRIST_BOARD, WRIST_GROUND };
-
-    //int lastElbowTargetPos = 0;
-    //int curPos = 0;
-    //int curMove = 0;
-    //int move = 0;
 
     public Arm2(OpMode opMode) {
         this.opMode = opMode;
@@ -59,13 +50,13 @@ public class Arm2 {
 
         // Reset the motor encoder so that it reads zero ticks
         elbowMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elbowMotorLeft.setTargetPosition(ELBOW_STORAGE);
+        elbowMotorLeft.setTargetPosition(State.STORAGE.ELBOW_POS);
         // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
         elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Reset the motor encoder so that it reads zero ticks
         elbowMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        elbowMotorRight.setTargetPosition(ELBOW_STORAGE);
+        elbowMotorRight.setTargetPosition(State.STORAGE.ELBOW_POS);
         // Turn the motor back on, required if you use STOP_AND_RESET_ENCODER
         elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -78,11 +69,11 @@ public class Arm2 {
 
     public void update() {
         if (opMode.gamepad1.left_trigger > 0) {
-            setState(Arm2.GROUND_STATE);
+            setState(State.GROUND);
         }
 
         else if (opMode.gamepad1.right_trigger > 0) {
-            setState(Arm2.BOARD_STATE);
+            setState(State.BOARD);
         }
 
         // wristPos += (opMode.gamepad1.left_bumper? -1 : 0) * WRIST_SPEED;
@@ -130,29 +121,27 @@ public class Arm2 {
         }
 
 
-        opMode.telemetry.addData("CycleLeft", cycleLeft);
-        opMode.telemetry.addData("CycleRight", cycleRight);
-        opMode.telemetry.addData("ELBOW_GROUND", ELBOW_GROUND);
-        opMode.telemetry.addData("ELBOW_BOARD", ELBOW_BOARD);
-        opMode.telemetry.addData("ELBOW_SHIFT", elbowShift);
+        opMode.telemetry.addData("cycleLeft", cycleLeft);
+        opMode.telemetry.addData("cycleRight", cycleRight);
+        opMode.telemetry.addData("elbowShift", elbowShift);
     }
 
     public void reset() {
-        setElbowTargetPos(-ELBOW_GROUND);
+        setElbowTargetPos(-State.GROUND.ELBOW_POS);
         //moveElbow(-ELBOW_GROUND); // Hardcoded value to be called in seperate opmode
-        wrist.setPosition(WRIST_STORAGE);
+        wrist.setPosition(State.STORAGE.WRIST_POS);
     }
 
     public void adjust() {
         final double ADJUST_SPEED = 0.25;
 
-        if (state != GROUND_STATE) return;
+        if (state != State.GROUND) return;
         if (!opMode.gamepad1.left_bumper && !opMode.gamepad1.right_bumper) return;
 
         elbowShift += (opMode.gamepad1.left_bumper ? -1 : 0) * ADJUST_SPEED;
         elbowShift += (opMode.gamepad1.right_bumper ? 1 : 0) * ADJUST_SPEED;
 
-        setState(GROUND_STATE);
+        setState(State.GROUND);
     }
     /*
     public void adjust() {
@@ -215,12 +204,16 @@ public class Arm2 {
 ////        wrist.setPosition(pos);
 ////    }
 //
-    public void setState(int newState) {
+    public void setState(State newState) {
         state = newState;
-        if (state == STORAGE_STATE) closeClawRight();
 
-        setElbowTargetPos(ELBOW_STATE_POS[state] + (int) elbowShift);
-        wrist.setPosition(WRIST_STATE_POS[state]);
+        if (state == State.STORAGE) {
+            closeClawLeft();
+            closeClawRight();
+        }
+
+        setElbowTargetPos(state.ELBOW_POS + (int) elbowShift);
+        wrist.setPosition(state.WRIST_POS);
     }
 
     public void openClawLeft() {

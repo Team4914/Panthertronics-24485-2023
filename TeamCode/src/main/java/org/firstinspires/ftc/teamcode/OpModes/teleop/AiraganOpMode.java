@@ -35,7 +35,7 @@ public class AiraganOpMode extends OpMode {
 
     @Override
     public void start() {
-        arm.setState(Arm2.BOARD_STATE);
+        arm.setState(Arm2.State.BOARD);
     }
 
     @Override

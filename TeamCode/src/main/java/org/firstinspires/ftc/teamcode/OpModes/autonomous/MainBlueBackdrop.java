@@ -74,7 +74,7 @@ public class MainBlueBackdrop extends LinearOpMode {
         drive.followTrajectory(path1);
 
         // drop off pixel
-        arm.setState(Arm2.BOARD_STATE);
+        arm.setState(Arm2.State.BOARD);
 
         while (arm.elbowMotorLeft.isBusy() && opModeIsActive())
             sleep(10);
@@ -87,7 +87,7 @@ public class MainBlueBackdrop extends LinearOpMode {
         drive.followTrajectory(path2);
 
         // reset arm
-        arm.setState(Arm2.STORAGE_STATE);
+        arm.setState(Arm2.State.STORAGE);
     }
 
     // Telemetry
