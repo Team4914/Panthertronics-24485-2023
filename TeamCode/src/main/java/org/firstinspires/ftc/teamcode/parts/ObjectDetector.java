@@ -12,6 +12,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ObjectDetector {
@@ -68,6 +70,20 @@ public class ObjectDetector {
 
     public List<Recognition> getRecognitions() {
         return tfod.getRecognitions();
+    }
+
+    public Recognition getBestRecognition(List<Recognition> list) {
+        double maxConf = 0;
+        Recognition best = null;
+
+        for (Recognition rec : list) {
+            if (rec.getConfidence() > maxConf) {
+                best = rec;
+                maxConf = rec.getConfidence();
+            }
+        }
+
+        return best;
     }
 
     /**
@@ -136,6 +152,7 @@ public class ObjectDetector {
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
+
     private void telemetryTfod() {
         List<Recognition> currentRecognitions = getRecognitions();
         opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
@@ -172,6 +189,20 @@ public class ObjectDetector {
         else
             return 1; // center
     }
+
+    public int recognizeTeamPropPosition() {
+        List<Recognition> recognitions = getRecognitions();
+        if (recognitions.size() == 0) return 0; // default is left
+
+        // if (recognition.getLabel() == team prop) TODO: filter other labels
+
+        Recognition best = getBestRecognition(recognitions);
+        double x = (best.getLeft() + best.getRight()) / 2;
+        double y = (best.getTop() + best.getBottom()) / 2;
+
+        return ObjectDetector.decidePosition(x, y, best.getConfidence());
+    }
+
     public void close() {
         visionPortal.close();
     }

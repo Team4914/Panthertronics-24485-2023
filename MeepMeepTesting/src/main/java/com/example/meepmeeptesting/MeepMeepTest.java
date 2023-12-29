@@ -12,7 +12,8 @@ public class MeepMeepTest {
     final static double ROBOT_LENGTH = 17;
     final static double ROBOT_CENTER_X = ROBOT_WIDTH/2;
     final static double ROBOT_CENTER_Y = ROBOT_LENGTH/2;
-    final static double ARM_GROUND_LENGTH = 8; // placeholder value
+    final static double ARM_GROUND_LENGTH = 12; // placeholder value
+    final static double CLAW_LENGTH = 4;
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
@@ -30,7 +31,7 @@ public class MeepMeepTest {
                 .build();
         */
 
-        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH / 2, -72 + ROBOT_LENGTH / 2, Math.PI / 2);
+        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
         Pose2d parkPose = new Pose2d(60, -60, Math.PI);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -38,17 +39,15 @@ public class MeepMeepTest {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .splineToLinearHeading(new Pose2d(48, -24, Math.PI), Math.PI/2)
-
-                                .splineTo(new Vector2d(ARM_GROUND_LENGTH + ROBOT_LENGTH/2, -24), Math.PI)
-                                .addTemporalMarker(() -> {/*arm.setState(Arm2.State.GROUND)*/})
-                                .waitSeconds(3)
-                                .addTemporalMarker(() -> {/*arm.openClawLeft()*/})
+                                .splineToLinearHeading(new Pose2d(14, -24 - ARM_GROUND_LENGTH + CLAW_LENGTH/2 - ROBOT_LENGTH/2, Math.PI/2), Math.PI/2)
+                                //.addTemporalMarker(arm::openClawLeft)
                                 .waitSeconds(1)
-                                .addTemporalMarker(() -> {/*arm.setState(Arm2.State.BOARD)*/})
+                                //.addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                                 .waitSeconds(1)
-                                .splineToLinearHeading(new Pose2d(48, -36 + 6, 0), 0)
-                                .addTemporalMarker(() -> {/*arm.openClawRight()*/})
+                                .back(6)
+                                .strafeRight(7)
+                                .splineToLinearHeading(new Pose2d(48, -36 - 6, 0), 0)
+                                //.addTemporalMarker(arm::openClawRight)
                                 .waitSeconds(1)
                                 .back(12)
                                 .splineToLinearHeading(parkPose, 0)
