@@ -43,19 +43,19 @@ public class AutonTest extends LinearOpMode {
 
         TrajectorySequence leftTapeTraj = drive.trajectorySequenceBuilder(startPose)
                 .splineToLinearHeading(
-                      new Pose2d(
-                      ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2,
-                      -24  - ROBOT_LENGTH/2 + 2,
-                      Math.PI),
-                Math.PI
+                        new Pose2d(
+                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH,
+                                -24  - ROBOT_LENGTH/2 + 4,
+                                Math.PI),
+                        Math.PI
                 )
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
-                .strafeRight(7)
-                .splineToLinearHeading(new Pose2d(48, -36 + 7, 0), 0)
+                .strafeRight(9)
+                .splineToLinearHeading(new Pose2d(48, -36 + 9, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
@@ -63,14 +63,14 @@ public class AutonTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence middleTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(14, -24 - ARM_GROUND_LENGTH + CLAW_LENGTH/2 - ROBOT_LENGTH/2, Math.PI/2), Math.PI/2)
+                .splineToLinearHeading(new Pose2d(14, -24 -0.5 - ARM_GROUND_LENGTH + CLAW_LENGTH/2 - ROBOT_LENGTH/2, Math.PI/2), Math.PI/2)
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
                 .strafeRight(7)
-                .splineToLinearHeading(new Pose2d(48, -36 +1, 0), 0)
+                .splineToLinearHeading(new Pose2d(48, -36 + 2, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
@@ -107,7 +107,7 @@ public class AutonTest extends LinearOpMode {
             sleep(10);
         sleep(2000);
 
-        drive.followTrajectorySequence(middleTapeTraj);
+        drive.followTrajectorySequence(leftTapeTraj);
 
         // reset arm
         arm.setState(Arm2.State.STORAGE);

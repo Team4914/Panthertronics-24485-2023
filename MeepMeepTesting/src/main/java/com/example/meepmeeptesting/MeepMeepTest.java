@@ -39,14 +39,20 @@ public class MeepMeepTest {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .splineToLinearHeading(new Pose2d(14, -24 - ARM_GROUND_LENGTH + CLAW_LENGTH/2 - ROBOT_LENGTH/2, Math.PI/2), Math.PI/2)
+                                .splineToLinearHeading(
+                                        new Pose2d(
+                                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2,
+                                                -24  - ROBOT_LENGTH/2 + 4,
+                                                Math.PI),
+                                        Math.PI
+                                )
                                 //.addTemporalMarker(arm::openClawLeft)
                                 .waitSeconds(1)
                                 //.addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                                 .waitSeconds(1)
                                 .back(6)
-                                .strafeRight(7)
-                                .splineToLinearHeading(new Pose2d(48, -36 - 6, 0), 0)
+                                .strafeRight(9)
+                                .splineToLinearHeading(new Pose2d(48, -36 + 9, 0), 0)
                                 //.addTemporalMarker(arm::openClawRight)
                                 .waitSeconds(1)
                                 .back(12)
