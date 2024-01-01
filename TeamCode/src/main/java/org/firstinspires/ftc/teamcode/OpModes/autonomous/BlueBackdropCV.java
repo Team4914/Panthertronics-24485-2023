@@ -42,20 +42,14 @@ public class BlueBackdropCV extends LinearOpMode {
         Pose2d parkPose = new Pose2d(60, -60, Math.PI);
 
         TrajectorySequence leftTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(
-                        new Pose2d(
-                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 1.5,
-                                24 + ROBOT_LENGTH/2 - 4,
-                                Math.PI),
-                        Math.PI
-                )
+                .splineToLinearHeading(new Pose2d(24, 24 + 9.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
-                .turn(Math.PI)
-                .splineToLinearHeading(new Pose2d(46.5, 36 + 9, 0), 0)
+                .strafeLeft(12)
+                .splineToLinearHeading(new Pose2d(47, 36 + 9, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
@@ -80,14 +74,20 @@ public class BlueBackdropCV extends LinearOpMode {
                 .build();
 
         TrajectorySequence rightTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(24, 24 + 9.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
+                .splineToLinearHeading(
+                        new Pose2d(
+                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 1.5,
+                                24 + ROBOT_LENGTH/2 - 4,
+                                Math.PI),
+                        Math.PI
+                )
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
-                .strafeLeft(12)
-                .splineToLinearHeading(new Pose2d(47, 36 + 9, 0), 0)
+                .turn(Math.PI)
+                .splineToLinearHeading(new Pose2d(46.5, 36 + 9, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
