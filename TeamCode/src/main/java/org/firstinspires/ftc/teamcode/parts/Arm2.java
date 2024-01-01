@@ -19,7 +19,7 @@ public class Arm2 {
 
     // State
     public enum State {
-        GROUND(-1530, 0.64),
+        GROUND(-1550, 0.64),
         BOARD(GROUND.ELBOW_POS + 350, 0.654),
         STORAGE(0, 0.03);
 

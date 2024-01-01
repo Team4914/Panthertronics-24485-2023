@@ -19,7 +19,7 @@ public class CVTest extends LinearOpMode {
 
     public void runOpMode() {
         // Initialization
-        ObjectDetector obj = new ObjectDetector(this);
+        ObjectDetector obj = new ObjectDetector(this, "BlueProp.tflite");
 
         /*
         List<Recognition> currentRecognitions = objD.getRecognitions();

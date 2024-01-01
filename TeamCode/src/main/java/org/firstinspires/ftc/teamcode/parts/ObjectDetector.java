@@ -20,13 +20,14 @@ public class ObjectDetector {
     OpMode opMode;
 
     public static final double CONFIDENCE_REQUIRED = 0.7;
-    public static final int TAPE_BORDER = 300;
+    public static final int TAPE_BORDER = 430;
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "cube1.tflite";
+    //private static final String TFOD_MODEL_ASSET = "RedProp.tflite";
+    String tfodModelAsset;
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
@@ -45,8 +46,10 @@ public class ObjectDetector {
      */
     private VisionPortal visionPortal;
 
-    public ObjectDetector(OpMode opMode) {
+    public ObjectDetector(OpMode opMode, String tfodModelAsset) {
         this.opMode = opMode;
+
+        this.tfodModelAsset = tfodModelAsset;
 
         initTfod();
 
@@ -99,11 +102,11 @@ public class ObjectDetector {
                 // choose one of the following:
                 //   Use setModelAssetName() if the custom TF Model is built in as an asset (AS only).
                 //   Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-                .setModelAssetName(TFOD_MODEL_ASSET)
+                .setModelAssetName(tfodModelAsset)
 
                 // The following default settings are available to un-comment and edit as needed to
                 // set parameters for custom models.
-                //.setModelLabels(LABELS)
+                .setModelLabels(LABELS)
                 //.setIsModelTensorFlow2(true)
                 //.setIsModelQuantized(true)
                 //.setModelInputSize(300)
@@ -116,7 +119,7 @@ public class ObjectDetector {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(opMode.hardwareMap.get(WebcamName.class, "Zain"));
+            builder.setCamera(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }

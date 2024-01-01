@@ -31,8 +31,8 @@ public class MeepMeepTest {
                 .build();
         */
 
-        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
-        Pose2d parkPose = new Pose2d(60, -60, Math.PI);
+        Pose2d startPose = new Pose2d(0 + ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
+        Pose2d parkPose = new Pose2d(60, 60, Math.PI);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -41,8 +41,8 @@ public class MeepMeepTest {
                         drive.trajectorySequenceBuilder(startPose)
                                 .splineToLinearHeading(
                                         new Pose2d(
-                                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2,
-                                                -24  - ROBOT_LENGTH/2 + 4,
+                                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 1.5,
+                                                24 + ROBOT_LENGTH/2 - 4,
                                                 Math.PI),
                                         Math.PI
                                 )
@@ -51,11 +51,12 @@ public class MeepMeepTest {
                                 //.addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                                 .waitSeconds(1)
                                 .back(6)
-                                .strafeRight(9)
-                                .splineToLinearHeading(new Pose2d(48, -36 + 9, 0), 0)
+                                .turn(Math.PI)
+                                .splineToLinearHeading(new Pose2d(46.5, 36 + 9, 0), 0)
                                 //.addTemporalMarker(arm::openClawRight)
                                 .waitSeconds(1)
                                 .back(12)
+                                .turn(Math.PI)
                                 .splineToLinearHeading(parkPose, 0)
                                 .build()
                 );
