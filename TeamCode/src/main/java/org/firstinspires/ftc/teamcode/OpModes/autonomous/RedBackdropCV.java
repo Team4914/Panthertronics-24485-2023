@@ -45,7 +45,7 @@ public class RedBackdropCV extends LinearOpMode {
                 .splineToLinearHeading(
                         new Pose2d(
                                 ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 1.5,
-                                -24  - ROBOT_LENGTH/2 + 4,
+                                -24  - ROBOT_LENGTH/2 + 1,
                                 Math.PI),
                         Math.PI
                 )

@@ -80,9 +80,16 @@ public class ObjectDetector {
         Recognition best = null;
 
         for (Recognition rec : list) {
-            if (rec.getConfidence() > maxConf) {
+            double conf = rec.getConfidence();
+
+            // if rec is on the right side, if height is too small then it's probably the tape
+            double height = rec.getTop() - rec.getBottom();
+            if ((rec.getLeft() + rec.getRight()) / 2 > TAPE_BORDER && height < 150)
+                conf -= 0.2;
+
+            if (conf > maxConf) {
                 best = rec;
-                maxConf = rec.getConfidence();
+                maxConf = conf;
             }
         }
 
