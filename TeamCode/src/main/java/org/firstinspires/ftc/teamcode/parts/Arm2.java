@@ -19,7 +19,7 @@ public class Arm2 {
 
     // State
     public enum State {
-        GROUND(-1530, 0.64),
+        GROUND(-1550, 0.64),
         BOARD(GROUND.ELBOW_POS + 350, 0.654),
         STORAGE(0, 0.03);
 
@@ -35,7 +35,8 @@ public class Arm2 {
 
     //double wristPos = 0.5;
     private int cycleLeft = -1, cycleRight = -1;
-    private TappedButton leftClawBut, rightClawBut;
+    private TappedButton leftClawBut = new TappedButton();
+    private TappedButton rightClawBut = new TappedButton();
 
     double elbowShift = 0;
 
@@ -164,8 +165,8 @@ public class Arm2 {
         elbowMotorRight.setTargetPosition(pos);
         elbowMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elbowMotorLeft.setPower(0.5);
-        elbowMotorRight.setPower(0.5);
+        elbowMotorLeft.setPower(0.7);
+        elbowMotorRight.setPower(0.7);
     }
 //    public void moveElbow(int dist) {
 //        elbowMotorLeft.setTargetPosition(dist);

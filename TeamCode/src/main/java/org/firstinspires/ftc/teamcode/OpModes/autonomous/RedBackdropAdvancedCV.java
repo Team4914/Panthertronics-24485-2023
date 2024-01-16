@@ -79,7 +79,7 @@ public class RedBackdropAdvancedCV extends OpMode {
     @Override
     public void init() {
         // Initialization
-        objD = new ObjectDetector(this);
+        objD = new ObjectDetector(this, "RedProp.tflite");
         arm = new Arm2(this);
 
         drive = new SampleMecanumDrive(hardwareMap);

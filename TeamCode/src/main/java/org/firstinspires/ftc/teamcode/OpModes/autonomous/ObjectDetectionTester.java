@@ -38,7 +38,7 @@ public class ObjectDetectionTester extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialization
-        ObjectDetector objD = new ObjectDetector(this);
+        ObjectDetector objD = new ObjectDetector(this, "RedProp.tflite");
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 

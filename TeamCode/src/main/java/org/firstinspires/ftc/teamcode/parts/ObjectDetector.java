@@ -12,19 +12,22 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ObjectDetector {
     OpMode opMode;
 
     public static final double CONFIDENCE_REQUIRED = 0.7;
-    public static final int TAPE_BORDER = 300;
+    public static final int TAPE_BORDER = 430;
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "cube1.tflite";
+    //private static final String TFOD_MODEL_ASSET = "RedProp.tflite";
+    String tfodModelAsset;
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
@@ -43,8 +46,10 @@ public class ObjectDetector {
      */
     private VisionPortal visionPortal;
 
-    public ObjectDetector(OpMode opMode) {
+    public ObjectDetector(OpMode opMode, String tfodModelAsset) {
         this.opMode = opMode;
+
+        this.tfodModelAsset = tfodModelAsset;
 
         initTfod();
 
@@ -70,6 +75,27 @@ public class ObjectDetector {
         return tfod.getRecognitions();
     }
 
+    public Recognition getBestRecognition(List<Recognition> list) {
+        double maxConf = 0;
+        Recognition best = null;
+
+        for (Recognition rec : list) {
+            double conf = rec.getConfidence();
+
+            // if rec is on the right side, if height is too small then it's probably the tape
+            double height = rec.getTop() - rec.getBottom();
+            if ((rec.getLeft() + rec.getRight()) / 2 > TAPE_BORDER && height < 150)
+                conf -= 0.2;
+
+            if (conf > maxConf) {
+                best = rec;
+                maxConf = conf;
+            }
+        }
+
+        return best;
+    }
+
     /**
      * Initialize the TensorFlow Object Detection processor.
      */
@@ -83,11 +109,11 @@ public class ObjectDetector {
                 // choose one of the following:
                 //   Use setModelAssetName() if the custom TF Model is built in as an asset (AS only).
                 //   Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-                .setModelAssetName(TFOD_MODEL_ASSET)
+                .setModelAssetName(tfodModelAsset)
 
                 // The following default settings are available to un-comment and edit as needed to
                 // set parameters for custom models.
-                //.setModelLabels(LABELS)
+                .setModelLabels(LABELS)
                 //.setIsModelTensorFlow2(true)
                 //.setIsModelQuantized(true)
                 //.setModelInputSize(300)
@@ -100,7 +126,7 @@ public class ObjectDetector {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(opMode.hardwareMap.get(WebcamName.class, "Zain"));
+            builder.setCamera(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
@@ -136,6 +162,7 @@ public class ObjectDetector {
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
+
     private void telemetryTfod() {
         List<Recognition> currentRecognitions = getRecognitions();
         opMode.telemetry.addData("# Objects Detected", currentRecognitions.size());
@@ -172,6 +199,20 @@ public class ObjectDetector {
         else
             return 1; // center
     }
+
+    public int recognizeTeamPropPosition() {
+        List<Recognition> recognitions = getRecognitions();
+        if (recognitions.size() == 0) return 0; // default is left
+
+        // if (recognition.getLabel() == team prop) TODO: filter other labels
+
+        Recognition best = getBestRecognition(recognitions);
+        double x = (best.getLeft() + best.getRight()) / 2;
+        double y = (best.getTop() + best.getBottom()) / 2;
+
+        return ObjectDetector.decidePosition(x, y, best.getConfidence());
+    }
+
     public void close() {
         visionPortal.close();
     }
