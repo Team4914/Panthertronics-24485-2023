@@ -36,48 +36,53 @@ public class BlueBackdropCV extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
+        Pose2d startPose = new Pose2d(24 - 1 - ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
+        Pose2d parkPose = new Pose2d(60, 60, Math.PI);
         drive.setPoseEstimate(startPose);
 
-        Pose2d parkPose = new Pose2d(60, -60, Math.PI);
-
         TrajectorySequence leftTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(24, 24 + 9.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
-                .addTemporalMarker(arm::openClawLeft)
-                .waitSeconds(1)
-                .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
-                .waitSeconds(1)
-                .back(6)
-                .strafeLeft(12)
-                .splineToLinearHeading(new Pose2d(47, 36 + 9, 0), 0)
-                .addTemporalMarker(arm::openClawRight)
-                .waitSeconds(1)
-                .back(12)
-                .turn(Math.PI)
-                .splineToLinearHeading(parkPose, 0)
-                .build();
-
-        TrajectorySequence middleTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(14, 24 + 0.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
+                .splineToLinearHeading(new Pose2d(24, 24 + 10 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
                 .strafeLeft(8)
+                .forward(12)
+                .turn(Math.PI/2)
+                .splineToLinearHeading(new Pose2d(47, 36 + 10.5, 0), 0)
+                .addTemporalMarker(arm::openClawRight)
+                .waitSeconds(1)
+                .back(12)
+                .turn(Math.PI)
+                .strafeRight(6)
+                .splineToLinearHeading(parkPose, 0)
+                .build();
+
+        TrajectorySequence middleTapeTraj = drive.trajectorySequenceBuilder(startPose)
+                .splineToLinearHeading(new Pose2d(14, 24 + 6 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
+                .addTemporalMarker(arm::openClawLeft)
+                .waitSeconds(1)
+                .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
+                .waitSeconds(1)
+                .back(6)
+                .strafeLeft(8)
+                .forward(11)
+                .turn(Math.PI/2)
                 .splineToLinearHeading(new Pose2d(47, 36 + 2, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
                 .turn(Math.PI)
+                .strafeRight(8)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
         TrajectorySequence rightTapeTraj = drive.trajectorySequenceBuilder(startPose)
                 .splineToLinearHeading(
                         new Pose2d(
-                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 1.5,
-                                24 + ROBOT_LENGTH/2 - 4,
+                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 4,
+                                24 + ROBOT_LENGTH/2 + 2,
                                 Math.PI),
                         Math.PI
                 )
@@ -87,11 +92,13 @@ public class BlueBackdropCV extends LinearOpMode {
                 .waitSeconds(1)
                 .back(6)
                 .turn(Math.PI)
-                .splineToLinearHeading(new Pose2d(46.5, 36 + 9, 0), 0)
+                .splineToLinearHeading(new Pose2d(48.5, 36 -4, 0), 0)
+                .waitSeconds(1)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
                 .turn(Math.PI)
+                .strafeRight(32)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
@@ -114,7 +121,6 @@ public class BlueBackdropCV extends LinearOpMode {
         while (arm.elbowMotorLeft.isBusy() && opModeIsActive())
             sleep(10);
         sleep(2000);
-
 
         switch (teamPropPos) {
             case 0:

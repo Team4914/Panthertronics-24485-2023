@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Launcher {
+    public static final double LAUNCH_OPEN = 0;
+    public static final double LAUNCH_CLOSE = 1;
 
     OpMode opMode;
 
@@ -21,5 +23,6 @@ public class Launcher {
         else if (opMode.gamepad1.a) {
             launchServo.setPosition(1);
         }
+        else launchServo.setPosition(0.5);
     }
 }

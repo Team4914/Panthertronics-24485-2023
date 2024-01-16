@@ -37,9 +37,9 @@ public class RedBackdropCV extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(24 - ROBOT_WIDTH/2,-72 + ROBOT_LENGTH/2, Math.PI/2);
-        drive.setPoseEstimate(startPose);
-
         Pose2d parkPose = new Pose2d(60, -60, Math.PI);
+
+        drive.setPoseEstimate(startPose);
 
         TrajectorySequence leftTapeTraj = drive.trajectorySequenceBuilder(startPose)
                 .splineToLinearHeading(
@@ -59,6 +59,9 @@ public class RedBackdropCV extends LinearOpMode {
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
+                .turn(Math.PI)
+                .strafeLeft(28)
+                .waitSeconds(0.5)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
@@ -74,21 +77,27 @@ public class RedBackdropCV extends LinearOpMode {
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
+                .turn(Math.PI)
+                .strafeLeft(28)
+                .waitSeconds(0.5)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
         TrajectorySequence rightTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(24, -24 - 9.5 - ARM_GROUND_LENGTH + CLAW_LENGTH/2 - ROBOT_LENGTH/2, Math.PI/2), Math.PI/2)
+                .splineToLinearHeading(new Pose2d(24, -24 - 11 - ARM_GROUND_LENGTH + CLAW_LENGTH/2 - ROBOT_LENGTH/2, Math.PI/2), Math.PI/2)
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
                 .strafeRight(7)
-                .splineToLinearHeading(new Pose2d(47, -36 - 6, 0), 0)
+                .splineToLinearHeading(new Pose2d(47, -36 - 8, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
+                .turn(Math.PI)
+                .strafeLeft(16)
+                .waitSeconds(0.5)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 

@@ -41,47 +41,50 @@ public class AutonTestBlue extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence leftTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(24, 24 + 10.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
-
+                .splineToLinearHeading(new Pose2d(24, 24 + 10 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
                 .strafeLeft(8)
-                .forward(14)
+                .forward(12)
                 .turn(Math.PI/2)
-                .splineToLinearHeading(new Pose2d(47, 36 + 9, 0), 0)
+                .splineToLinearHeading(new Pose2d(47, 36 + 10.5, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
                 .turn(Math.PI)
+                .strafeRight(6)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
         TrajectorySequence middleTapeTraj = drive.trajectorySequenceBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(14, 24 + 0.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
+                .splineToLinearHeading(new Pose2d(14, 24 + 6 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                 .waitSeconds(1)
                 .back(6)
                 .strafeLeft(8)
+                .forward(11)
+                .turn(Math.PI/2)
                 .splineToLinearHeading(new Pose2d(47, 36 + 2, 0), 0)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
                 .turn(Math.PI)
+                .strafeRight(8)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
         TrajectorySequence rightTapeTraj = drive.trajectorySequenceBuilder(startPose)
                 .splineToLinearHeading(
-                    new Pose2d(
-                        ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 1.5,
-                        24 + ROBOT_LENGTH/2 - 4,
-                        Math.PI),
-                    Math.PI
+                        new Pose2d(
+                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 4,
+                                24 + ROBOT_LENGTH/2 + 2,
+                                Math.PI),
+                        Math.PI
                 )
                 .addTemporalMarker(arm::openClawLeft)
                 .waitSeconds(1)
@@ -89,11 +92,13 @@ public class AutonTestBlue extends LinearOpMode {
                 .waitSeconds(1)
                 .back(6)
                 .turn(Math.PI)
-                .splineToLinearHeading(new Pose2d(46.5, 36 + 9, 0), 0)
+                .splineToLinearHeading(new Pose2d(48.5, 36 -4, 0), 0)
+                .waitSeconds(1)
                 .addTemporalMarker(arm::openClawRight)
                 .waitSeconds(1)
                 .back(12)
                 .turn(Math.PI)
+                .strafeRight(32)
                 .splineToLinearHeading(parkPose, 0)
                 .build();
 
@@ -112,7 +117,7 @@ public class AutonTestBlue extends LinearOpMode {
             sleep(10);
         sleep(2000);
 
-        drive.followTrajectorySequence(leftTapeTraj);
+        drive.followTrajectorySequence(rightTapeTraj);
 
         // reset arm
         arm.setState(Arm2.State.STORAGE);

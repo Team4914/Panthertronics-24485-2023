@@ -31,7 +31,7 @@ public class MeepMeepTest {
                 .build();
         */
 
-        Pose2d startPose = new Pose2d(0 + ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
+        Pose2d startPose = new Pose2d(24 - 1 - ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
         Pose2d parkPose = new Pose2d(60, 60, Math.PI);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -39,20 +39,26 @@ public class MeepMeepTest {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .splineToLinearHeading(new Pose2d(24, 24 + 10.5 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + ROBOT_LENGTH/2, -Math.PI/2), Math.PI/2)
+                                .splineToLinearHeading(
+                                        new Pose2d(
+                                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 4,
+                                                24 + ROBOT_LENGTH/2 + 2,
+                                                Math.PI),
+                                        Math.PI
+                                )
                                 //.addTemporalMarker(arm::openClawLeft)
                                 .waitSeconds(1)
                                 //.addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
                                 .waitSeconds(1)
                                 .back(6)
-                                .strafeLeft(8)
-                                .forward(14)
-                                .turn(Math.PI/2)
-                                .splineToLinearHeading(new Pose2d(47, 36 + 9, 0), 0)
+                                .turn(Math.PI)
+                                .splineToLinearHeading(new Pose2d(48.5, 36 -4, 0), 0)
+                                .waitSeconds(1)
                                 //.addTemporalMarker(arm::openClawRight)
                                 .waitSeconds(1)
                                 .back(12)
                                 .turn(Math.PI)
+                                .strafeRight(32)
                                 .splineToLinearHeading(parkPose, 0)
                                 .build()
                 );
