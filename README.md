@@ -1,5 +1,5 @@
 ## Welcome!
-This GitHub repository contains the source code that is for Team 24485 Panthertronics from Victoria Park Collegiate Institute for 2023-2024 Center Stage.
+This GitHub repository contains the source code that is for Team 24485 Panthertronics from **Victoria Park Collegiate Institute** for 2023-2024 Center Stage.
 
 ## Requirements
 To use this Android Studio project, you will need Android Studio 2021.2 (codename Chipmunk) or later.
