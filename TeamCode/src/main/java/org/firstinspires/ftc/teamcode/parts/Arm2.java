@@ -100,17 +100,7 @@ public class Arm2 {
         }
 
         if (rightClawBut.update(opMode.gamepad1.b)) {
-            cycleRight = (cycleRight + 1) % 2;
-
-            if (cycleRight == 0) {
-                closeClawRight();
-                opMode.telemetry.addData("Claw Right", "Closed");
-            }
-            else {
-                openClawRight();
-                opMode.telemetry.addData("Claw Right", "OPEN");
-            }
-        }
+         }
 
         opMode.telemetry.addData("cycleLeft", cycleLeft);
         opMode.telemetry.addData("cycleRight", cycleRight);
