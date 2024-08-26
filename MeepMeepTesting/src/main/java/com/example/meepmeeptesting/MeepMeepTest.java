@@ -31,7 +31,8 @@ public class MeepMeepTest {
                 .build();
         */
 
-        Pose2d startPose = new Pose2d(24 - 1 - ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
+        Pose2d startPose = new Pose2d(0, 0, 0);
+        //Pose2d startPose = new Pose2d(24 - 1 - ROBOT_WIDTH/2,72 - ROBOT_LENGTH/2, -Math.PI/2);
         Pose2d parkPose = new Pose2d(60, 60, Math.PI);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -41,25 +42,16 @@ public class MeepMeepTest {
                         drive.trajectorySequenceBuilder(startPose)
                                 .splineToLinearHeading(
                                         new Pose2d(
-                                                ROBOT_LENGTH/2 + ARM_GROUND_LENGTH - CLAW_LENGTH/2 + 4,
-                                                24 + ROBOT_LENGTH/2 + 2,
+                                                15, 35,
                                                 Math.PI),
                                         Math.PI
                                 )
-                                //.addTemporalMarker(arm::openClawLeft)
-                                .waitSeconds(1)
-                                //.addTemporalMarker(() -> arm.setState(Arm2.State.BOARD))
-                                .waitSeconds(1)
-                                .back(6)
-                                .turn(Math.PI)
-                                .splineToLinearHeading(new Pose2d(48.5, 36 -4, 0), 0)
-                                .waitSeconds(1)
-                                //.addTemporalMarker(arm::openClawRight)
-                                .waitSeconds(1)
-                                .back(12)
-                                .turn(Math.PI)
-                                .strafeRight(32)
-                                .splineToLinearHeading(parkPose, 0)
+                                .forward(12)
+                                .turn(Math.toRadians(540))
+                                .splineToLinearHeading(
+                                        startPose,
+                                        Math.PI
+                                )
                                 .build()
                 );
 

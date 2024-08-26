@@ -25,7 +25,7 @@ public class MecanumDrive {
         // RFMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RBMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LFMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //LBMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         opMode.telemetry.addData("Mecanum Drive: ", "Initialized");
     }
@@ -49,4 +49,5 @@ public class MecanumDrive {
         LFMotor.setPower(pivot + (vertical + horizontal)); // good
         LBMotor.setPower(pivot + (vertical - horizontal)); // good
     }
+
 }
