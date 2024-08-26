@@ -7,6 +7,13 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import javax.imageio.ImageIO;
+
 public class MeepMeepTest {
     final static double ROBOT_WIDTH = 16.75;
     final static double ROBOT_LENGTH = 17;
@@ -55,8 +62,15 @@ public class MeepMeepTest {
                                 .build()
                 );
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
-                .setDarkMode(true)
+        //System.out.println(Paths.get(".").toAbsolutePath().normalize().toString());
+
+        Image img = null;
+        try { img = ImageIO.read(new File("CustomField.png")); }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        meepMeep.setBackground(img)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
                 .start();

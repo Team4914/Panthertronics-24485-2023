@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.OpModes.workshop;
+package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import com.noahbres.meepmeep.roadrunner.DriveShim;
 
 public class WorkshopMain extends WorkshopFunctions {
-    public WorkshopMain(SampleMecanumDrive drive, Pose2d startPose) { super(drive, startPose); }
+    public WorkshopMain(DriveShim drive, Pose2d startPose) { super(drive, startPose); }
 
 
     public void main() {

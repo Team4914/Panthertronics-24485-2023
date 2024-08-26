@@ -17,7 +17,7 @@ public class WorkshopOpMode extends LinearOpMode {
     public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        WorkshopMain workshopMain = new WorkshopMain(drive);
+        WorkshopMain workshopMain = new WorkshopMain(drive, new Pose2d(-60, 60, 0));
         TrajectorySequence traj = workshopMain.getTrajectorySequence();
 
         waitForStart();

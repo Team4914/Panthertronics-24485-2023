@@ -1,15 +1,14 @@
-package org.firstinspires.ftc.teamcode.OpModes.workshop;
+package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import com.noahbres.meepmeep.roadrunner.DriveShim;
+import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
+import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 public abstract class WorkshopFunctions {
     TrajectorySequenceBuilder builder;
 
-    public WorkshopFunctions(SampleMecanumDrive drive, Pose2d startPose) {
+    public WorkshopFunctions(DriveShim drive, Pose2d startPose) {
         drive.setPoseEstimate(startPose);
 
         builder = drive.trajectorySequenceBuilder(startPose);
@@ -35,3 +34,4 @@ public abstract class WorkshopFunctions {
         }
     }
 }
+
