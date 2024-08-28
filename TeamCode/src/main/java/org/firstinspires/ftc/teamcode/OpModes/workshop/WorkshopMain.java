@@ -10,11 +10,16 @@ public class WorkshopMain extends WorkshopFunctions {
 
     public void main() {
 
-        repeat(3, () -> {
-            // code goes here
-            forward(24);
-            turnLeft(90);
-        });
-
+//        repeat(3, () -> {
+//            // code goes here
+//            forward(24);
+//            turnLeft(90);
+//        });
+        turnLeft(180);
+        forward(3*24);
+        turnLeft(-90);
+        forward(2*24);
+        turnLeft(-90);
+        forward(2*24);
     }
 }

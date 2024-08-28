@@ -23,7 +23,7 @@ public class WorkshopTest {
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
-        Pose2d startPose = new Pose2d(-60, 60, 0);
+        Pose2d startPose = new Pose2d(36, -12, Math.PI);
 
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
